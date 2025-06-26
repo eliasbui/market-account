@@ -1,0 +1,280 @@
+{
+  "version": "1.0.0",
+  "description": "Shared event schemas for market-account e-commerce marketplace",
+  "events": {
+    "user": {
+      "user.created": {
+        "description": "Fired when a new user is created",
+        "schema": {
+          "eventId": "string (UUID)",
+          "eventType": "user.created",
+          "timestamp": "string (ISO 8601)",
+          "version": "string",
+          "data": {
+            "userId": "string (UUID)",
+            "email": "string",
+            "firstName": "string",
+            "lastName": "string",
+            "isActive": "boolean",
+            "createdAt": "string (ISO 8601)"
+          },
+          "metadata": {
+            "source": "user-service",
+            "correlationId": "string (UUID)",
+            "userId": "string (UUID)"
+          }
+        }
+      },
+      "user.updated": {
+        "description": "Fired when user information is updated",
+        "schema": {
+          "eventId": "string (UUID)",
+          "eventType": "user.updated",
+          "timestamp": "string (ISO 8601)",
+          "version": "string",
+          "data": {
+            "userId": "string (UUID)",
+            "email": "string",
+            "firstName": "string",
+            "lastName": "string",
+            "isActive": "boolean",
+            "updatedAt": "string (ISO 8601)",
+            "changes": "object (field: {old, new})"
+          },
+          "metadata": {
+            "source": "user-service",
+            "correlationId": "string (UUID)",
+            "userId": "string (UUID)"
+          }
+        }
+      }
+    },
+    "product": {
+      "product.created": {
+        "description": "Fired when a new product is created",
+        "schema": {
+          "eventId": "string (UUID)",
+          "eventType": "product.created",
+          "timestamp": "string (ISO 8601)",
+          "version": "string",
+          "data": {
+            "productId": "string (UUID)",
+            "name": "string",
+            "description": "string",
+            "price": "number",
+            "category": "string",
+            "stockQuantity": "number",
+            "isActive": "boolean",
+            "createdAt": "string (ISO 8601)"
+          },
+          "metadata": {
+            "source": "product-service",
+            "correlationId": "string (UUID)",
+            "userId": "string (UUID)"
+          }
+        }
+      },
+      "product.updated": {
+        "description": "Fired when product information is updated",
+        "schema": {
+          "eventId": "string (UUID)",
+          "eventType": "product.updated",
+          "timestamp": "string (ISO 8601)",
+          "version": "string",
+          "data": {
+            "productId": "string (UUID)",
+            "name": "string",
+            "description": "string",
+            "price": "number",
+            "category": "string",
+            "stockQuantity": "number",
+            "isActive": "boolean",
+            "updatedAt": "string (ISO 8601)",
+            "changes": "object (field: {old, new})"
+          },
+          "metadata": {
+            "source": "product-service",
+            "correlationId": "string (UUID)",
+            "userId": "string (UUID)"
+          }
+        }
+      },
+      "inventory.updated": {
+        "description": "Fired when product inventory changes",
+        "schema": {
+          "eventId": "string (UUID)",
+          "eventType": "inventory.updated",
+          "timestamp": "string (ISO 8601)",
+          "version": "string",
+          "data": {
+            "productId": "string (UUID)",
+            "oldQuantity": "number",
+            "newQuantity": "number",
+            "changeReason": "string (purchase|restock|adjustment)",
+            "orderId": "string (UUID, optional)"
+          },
+          "metadata": {
+            "source": "product-service",
+            "correlationId": "string (UUID)",
+            "userId": "string (UUID)"
+          }
+        }
+      }
+    },
+    "payment": {
+      "payment.initiated": {
+        "description": "Fired when a payment is initiated",
+        "schema": {
+          "eventId": "string (UUID)",
+          "eventType": "payment.initiated",
+          "timestamp": "string (ISO 8601)",
+          "version": "string",
+          "data": {
+            "paymentId": "string (UUID)",
+            "orderId": "string (UUID)",
+            "userId": "string (UUID)",
+            "amount": "number",
+            "currency": "string",
+            "provider": "string",
+            "status": "string",
+            "createdAt": "string (ISO 8601)"
+          },
+          "metadata": {
+            "source": "payment-service",
+            "correlationId": "string (UUID)",
+            "userId": "string (UUID)"
+          }
+        }
+      },
+      "payment.completed": {
+        "description": "Fired when a payment is successfully completed",
+        "schema": {
+          "eventId": "string (UUID)",
+          "eventType": "payment.completed",
+          "timestamp": "string (ISO 8601)",
+          "version": "string",
+          "data": {
+            "paymentId": "string (UUID)",
+            "orderId": "string (UUID)",
+            "userId": "string (UUID)",
+            "amount": "number",
+            "currency": "string",
+            "provider": "string",
+            "transactionId": "string",
+            "completedAt": "string (ISO 8601)"
+          },
+          "metadata": {
+            "source": "payment-service",
+            "correlationId": "string (UUID)",
+            "userId": "string (UUID)"
+          }
+        }
+      },
+      "payment.failed": {
+        "description": "Fired when a payment fails",
+        "schema": {
+          "eventId": "string (UUID)",
+          "eventType": "payment.failed",
+          "timestamp": "string (ISO 8601)",
+          "version": "string",
+          "data": {
+            "paymentId": "string (UUID)",
+            "orderId": "string (UUID)",
+            "userId": "string (UUID)",
+            "amount": "number",
+            "currency": "string",
+            "provider": "string",
+            "errorCode": "string",
+            "errorMessage": "string",
+            "failedAt": "string (ISO 8601)"
+          },
+          "metadata": {
+            "source": "payment-service",
+            "correlationId": "string (UUID)",
+            "userId": "string (UUID)"
+          }
+        }
+      }
+    },
+    "order": {
+      "order.created": {
+        "description": "Fired when a new order is created",
+        "schema": {
+          "eventId": "string (UUID)",
+          "eventType": "order.created",
+          "timestamp": "string (ISO 8601)",
+          "version": "string",
+          "data": {
+            "orderId": "string (UUID)",
+            "userId": "string (UUID)",
+            "items": [
+              {
+                "productId": "string (UUID)",
+                "quantity": "number",
+                "price": "number"
+              }
+            ],
+            "totalAmount": "number",
+            "currency": "string",
+            "status": "string",
+            "createdAt": "string (ISO 8601)"
+          },
+          "metadata": {
+            "source": "order-service",
+            "correlationId": "string (UUID)",
+            "userId": "string (UUID)"
+          }
+        }
+      }
+    }
+  },
+  "routingKeys": {
+    "user": {
+      "created": "user.events.created",
+      "updated": "user.events.updated"
+    },
+    "product": {
+      "created": "product.events.created",
+      "updated": "product.events.updated",
+      "inventory": "product.events.inventory"
+    },
+    "payment": {
+      "initiated": "payment.events.initiated",
+      "completed": "payment.events.completed",
+      "failed": "payment.events.failed"
+    },
+    "order": {
+      "created": "order.events.created",
+      "updated": "order.events.updated"
+    }
+  },
+  "exchanges": {
+    "marketplace.events": {
+      "type": "topic",
+      "description": "Main topic exchange for all marketplace events",
+      "durable": true
+    }
+  },
+  "queues": {
+    "user.events": {
+      "durable": true,
+      "description": "Queue for all user-related events"
+    },
+    "product.events": {
+      "durable": true,
+      "description": "Queue for all product-related events"
+    },
+    "payment.events": {
+      "durable": true,
+      "description": "Queue for all payment-related events"
+    },
+    "inventory.events": {
+      "durable": true,
+      "description": "Queue specifically for inventory updates"
+    },
+    "notification.events": {
+      "durable": true,
+      "description": "Queue for events that trigger notifications"
+    }
+  }
+} 

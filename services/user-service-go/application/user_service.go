@@ -3,7 +3,11 @@ package application
 import (
 	"context"
 	"errors"
+	"time"
 	"user-service/domain"
+	"user-service/infrastructure/messaging"
+
+	"github.com/google/uuid"
 )
 
 // UserRepository defines the interface for user data access
@@ -15,24 +19,23 @@ type UserRepository interface {
 	Delete(ctx context.Context, id string) error
 }
 
-// UserService implements the application use cases for user management
-type UserService struct {
-	userRepo UserRepository
+// MessagePublisher defines the interface for publishing events
+type MessagePublisher interface {
+	PublishUserCreated(userEvent messaging.UserCreatedEvent, correlationID, userID string) error
+	PublishUserUpdated(userEvent messaging.UserUpdatedEvent, correlationID, userID string) error
 }
 
-func (s *UserService) GetUser(ctx context.Context, id string) (*domain.User, error) {
-	user, err := s.userRepo.GetByID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	return user, nil
+// UserService implements the application use cases for user management
+type UserService struct {
+	userRepo  UserRepository
+	publisher MessagePublisher
 }
 
 // NewUserService creates a new instance of UserService
-func NewUserService(userRepo UserRepository) *UserService {
+func NewUserService(userRepo UserRepository, publisher MessagePublisher) *UserService {
 	return &UserService{
-		userRepo: userRepo,
+		userRepo:  userRepo,
+		publisher: publisher,
 	}
 }
 
@@ -54,6 +57,35 @@ func (s *UserService) CreateUser(ctx context.Context, email, username, password 
 
 	// Save to repository
 	if err := s.userRepo.Create(ctx, user); err != nil {
+		return nil, err
+	}
+
+	// Publish user created event
+	correlationID := uuid.New().String()
+	userCreatedEvent := messaging.UserCreatedEvent{
+		UserID:    user.ID.String(),
+		Email:     user.Email,
+		FirstName: user.Username,
+		LastName:  "",
+		IsActive:  user.IsActive,
+		CreatedAt: user.CreatedAt.Format(time.RFC3339),
+	}
+
+	if s.publisher != nil {
+		if err := s.publisher.PublishUserCreated(userCreatedEvent, correlationID, user.ID.String()); err != nil {
+			// Log error but don't fail the user creation
+			// In a real system, you might want to use a different error handling strategy
+			// such as storing failed events for retry
+		}
+	}
+
+	return user, nil
+}
+
+// GetUser retrieves a user by their ID
+func (s *UserService) GetUser(ctx context.Context, id string) (*domain.User, error) {
+	user, err := s.userRepo.GetByID(ctx, id)
+	if err != nil {
 		return nil, err
 	}
 
@@ -109,12 +141,62 @@ func (s *UserService) ValidateCredentials(ctx context.Context, email, password s
 }
 
 // UpdateUser updates user information
-func (s *UserService) UpdateUser(ctx context.Context, user *domain.User) error {
-	if user == nil {
+func (s *UserService) UpdateUser(ctx context.Context, updatedUser *domain.User) error {
+	if updatedUser == nil {
 		return errors.New("user is required")
 	}
 
-	return s.userRepo.Update(ctx, user)
+	// Get current user state for tracking changes
+	currentUser, err := s.userRepo.GetByID(ctx, updatedUser.ID.String())
+	if err != nil {
+		return err
+	}
+
+	// Track changes
+	changes := make(map[string]interface{})
+	if currentUser.Email != updatedUser.Email {
+		changes["email"] = map[string]interface{}{
+			"old": currentUser.Email,
+			"new": updatedUser.Email,
+		}
+	}
+	if currentUser.Username != updatedUser.Username {
+		changes["username"] = map[string]interface{}{
+			"old": currentUser.Username,
+			"new": updatedUser.Username,
+		}
+	}
+	if currentUser.IsActive != updatedUser.IsActive {
+		changes["isActive"] = map[string]interface{}{
+			"old": currentUser.IsActive,
+			"new": updatedUser.IsActive,
+		}
+	}
+
+	// Update in repository
+	if err := s.userRepo.Update(ctx, updatedUser); err != nil {
+		return err
+	}
+
+	// Publish user updated event if there are changes
+	if len(changes) > 0 && s.publisher != nil {
+		correlationID := uuid.New().String()
+		userUpdatedEvent := messaging.UserUpdatedEvent{
+			UserID:    updatedUser.ID.String(),
+			Email:     updatedUser.Email,
+			FirstName: updatedUser.Username,
+			LastName:  "",
+			IsActive:  updatedUser.IsActive,
+			UpdatedAt: time.Now().UTC().Format(time.RFC3339),
+			Changes:   changes,
+		}
+
+		if err := s.publisher.PublishUserUpdated(userUpdatedEvent, correlationID, updatedUser.ID.String()); err != nil {
+			// Log error but don't fail the user update
+		}
+	}
+
+	return nil
 }
 
 // DeleteUser removes a user from the system

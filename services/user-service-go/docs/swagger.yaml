@@ -1,0 +1,329 @@
+definitions:
+  web.CreateUserRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      password:
+        example: password123
+        minLength: 6
+        type: string
+      username:
+        example: johndoe
+        maxLength: 50
+        minLength: 3
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  web.ErrorResponse:
+    properties:
+      code:
+        example: INVALID_INPUT
+        type: string
+      details:
+        additionalProperties: true
+        type: object
+      error:
+        example: validation_error
+        type: string
+      message:
+        example: Invalid request data
+        type: string
+    type: object
+  web.SuccessResponse:
+    properties:
+      data: {}
+      message:
+        example: Operation completed successfully
+        type: string
+    type: object
+  web.UpdateUserRequest:
+    properties:
+      email:
+        example: updated@example.com
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      username:
+        example: newusername
+        maxLength: 50
+        minLength: 3
+        type: string
+    type: object
+  web.UserResponse:
+    properties:
+      created_at:
+        example: "2024-01-15T10:30:45Z"
+        type: string
+      email:
+        example: user@example.com
+        type: string
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      updated_at:
+        example: "2024-01-15T10:30:45Z"
+        type: string
+      username:
+        example: johndoe
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/users:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with email, username, and password
+      parameters:
+      - description: User creation data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/web.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/web.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/web.UserResponse'
+              type: object
+        "400":
+          description: Invalid request data
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "409":
+          description: Email already exists
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+      summary: Create a new user
+      tags:
+      - users
+  /api/v1/users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user by their ID
+      parameters:
+      - description: User ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User deleted successfully
+          schema:
+            $ref: '#/definitions/web.SuccessResponse'
+        "400":
+          description: Invalid user ID format
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+      summary: Delete user
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Get a single user by their UUID
+      parameters:
+      - description: User ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/web.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/web.UserResponse'
+              type: object
+        "400":
+          description: Invalid user ID format
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+      summary: Get user by ID
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update an existing user's information
+      parameters:
+      - description: User ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User update data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/web.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User updated successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/web.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/web.UserResponse'
+              type: object
+        "400":
+          description: Invalid request data or user ID
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+      summary: Update user
+      tags:
+      - users
+  /api/v1/users/email/{email}:
+    get:
+      consumes:
+      - application/json
+      description: Get a single user by their email address
+      parameters:
+      - description: User email address
+        in: path
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/web.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/web.UserResponse'
+              type: object
+        "400":
+          description: Invalid email
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+      summary: Get user by email
+      tags:
+      - users
+  /api/v1/users/validate:
+    post:
+      consumes:
+      - application/json
+      description: Validate user email and password for authentication
+      parameters:
+      - description: User credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          properties:
+            email:
+              type: string
+            password:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Credentials validated
+          schema:
+            allOf:
+            - $ref: '#/definitions/web.SuccessResponse'
+            - properties:
+                data:
+                  properties:
+                    is_valid:
+                      type: boolean
+                    user:
+                      $ref: '#/definitions/web.UserResponse'
+                  type: object
+              type: object
+        "400":
+          description: Invalid request data
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+      summary: Validate user credentials
+      tags:
+      - users
+  /health:
+    get:
+      description: Check the health status of the user service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Service is healthy
+          schema:
+            allOf:
+            - $ref: '#/definitions/web.SuccessResponse'
+            - properties:
+                data:
+                  properties:
+                    service:
+                      type: string
+                    status:
+                      type: string
+                    version:
+                      type: string
+                  type: object
+              type: object
+      summary: Health check
+      tags:
+      - health
+swagger: "2.0"

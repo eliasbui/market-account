@@ -1,0 +1,88 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+*.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# .NET
+bin/
+obj/
+out/
+*.user
+*.suo
+*.cache
+*.docstates
+[Dd]ebug/
+[Rr]elease/
+*.dll
+*.exe
+*.pdb
+*.pidb
+*.pdb.meta
+*.cache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.sdf
+ipch/
+obj/
+[Bb]in
+[Dd]ebug*/
+[Rr]elease*/
+Ankh.NoLoad
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Test Results
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+# Docker
+Dockerfile*
+.dockerignore
+docker-compose*
+
+# Environment files
+.env*
+!.env.example
+
+# Visual Studio
+.vs/
+*.csproj.user
+*.vbproj.user
+*.vcxproj.user
+*.vcxproj.filters
+*.vcxproj.user
+
+# Rider
+.idea/
+
+# User-specific files
+*.rsuser
+*.sln.docstates
+
+# Logs
+*.log
+logs/ 
