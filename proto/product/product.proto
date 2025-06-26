@@ -1,0 +1,231 @@
+syntax = "proto3";
+
+package product.v1;
+
+option go_package = "user-service/proto/product;productpb";
+option csharp_namespace = "ProductService.Proto.Product";
+option java_package = "com.marketplace.product.v1";
+
+// Product service definition for internal microservice communication
+service ProductService {
+  // Create a new product
+  rpc CreateProduct (CreateProductRequest) returns (CreateProductResponse);
+  
+  // Get product by ID
+  rpc GetProduct (GetProductRequest) returns (GetProductResponse);
+  
+  // Get products with pagination and filters
+  rpc GetProducts (GetProductsRequest) returns (GetProductsResponse);
+  
+  // Update product information
+  rpc UpdateProduct (UpdateProductRequest) returns (UpdateProductResponse);
+  
+  // Update product stock
+  rpc UpdateProductStock (UpdateProductStockRequest) returns (UpdateProductStockResponse);
+  
+  // Update product price
+  rpc UpdateProductPrice (UpdateProductPriceRequest) returns (UpdateProductPriceResponse);
+  
+  // Delete product
+  rpc DeleteProduct (DeleteProductRequest) returns (DeleteProductResponse);
+  
+  // Check product availability
+  rpc CheckProductAvailability (CheckProductAvailabilityRequest) returns (CheckProductAvailabilityResponse);
+  
+  // Reserve products for order (reduces stock temporarily)
+  rpc ReserveProducts (ReserveProductsRequest) returns (ReserveProductsResponse);
+  
+  // Confirm product reservation (finalizes stock reduction)
+  rpc ConfirmReservation (ConfirmReservationRequest) returns (ConfirmReservationResponse);
+  
+  // Cancel product reservation (restores stock)
+  rpc CancelReservation (CancelReservationRequest) returns (CancelReservationResponse);
+}
+
+// Product entity
+message Product {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  int32 stock_quantity = 5;
+  string category = 6;
+  string sku = 7;
+  bool is_active = 8;
+  int64 created_at = 9; // Unix timestamp
+  int64 updated_at = 10; // Unix timestamp
+  repeated string tags = 11;
+  map<string, string> metadata = 12; // Additional product attributes
+}
+
+// Product filters
+message ProductFilters {
+  optional string category = 1;
+  optional double min_price = 2;
+  optional double max_price = 3;
+  optional bool in_stock = 4;
+  repeated string tags = 5;
+  optional bool is_active = 6;
+}
+
+// Pagination
+message Pagination {
+  int32 page = 1;
+  int32 limit = 2;
+  int32 total = 3;
+  int32 total_pages = 4;
+}
+
+// Product reservation item
+message ProductReservationItem {
+  string product_id = 1;
+  int32 quantity = 2;
+}
+
+// Request messages
+message CreateProductRequest {
+  string name = 1;
+  string description = 2;
+  double price = 3;
+  int32 stock_quantity = 4;
+  string category = 5;
+  string sku = 6;
+  repeated string tags = 7;
+  map<string, string> metadata = 8;
+}
+
+message GetProductRequest {
+  string id = 1;
+}
+
+message GetProductsRequest {
+  optional ProductFilters filters = 1;
+  optional Pagination pagination = 2;
+}
+
+message UpdateProductRequest {
+  string id = 1;
+  optional string name = 2;
+  optional string description = 3;
+  optional double price = 4;
+  optional int32 stock_quantity = 5;
+  optional string category = 6;
+  optional string sku = 7;
+  optional bool is_active = 8;
+  repeated string tags = 9;
+  map<string, string> metadata = 10;
+}
+
+message UpdateProductStockRequest {
+  string id = 1;
+  int32 quantity = 2;
+}
+
+message UpdateProductPriceRequest {
+  string id = 1;
+  double price = 2;
+}
+
+message DeleteProductRequest {
+  string id = 1;
+}
+
+message CheckProductAvailabilityRequest {
+  repeated ProductReservationItem items = 1;
+}
+
+message ReserveProductsRequest {
+  string reservation_id = 1;
+  repeated ProductReservationItem items = 2;
+  int64 expiry_time = 3; // Unix timestamp when reservation expires
+}
+
+message ConfirmReservationRequest {
+  string reservation_id = 1;
+}
+
+message CancelReservationRequest {
+  string reservation_id = 1;
+}
+
+// Response messages
+message CreateProductResponse {
+  oneof result {
+    Product product = 1;
+    Error error = 2;
+  }
+}
+
+message GetProductResponse {
+  oneof result {
+    Product product = 1;
+    Error error = 2;
+  }
+}
+
+message GetProductsResponse {
+  repeated Product products = 1;
+  optional Pagination pagination = 2;
+  optional Error error = 3;
+}
+
+message UpdateProductResponse {
+  oneof result {
+    Product product = 1;
+    Error error = 2;
+  }
+}
+
+message UpdateProductStockResponse {
+  oneof result {
+    Product product = 1;
+    Error error = 2;
+  }
+}
+
+message UpdateProductPriceResponse {
+  oneof result {
+    Product product = 1;
+    Error error = 2;
+  }
+}
+
+message DeleteProductResponse {
+  bool success = 1;
+  optional Error error = 2;
+}
+
+message ProductAvailability {
+  string product_id = 1;
+  bool is_available = 2;
+  int32 available_quantity = 3;
+}
+
+message CheckProductAvailabilityResponse {
+  repeated ProductAvailability availability = 1;
+  optional Error error = 2;
+}
+
+message ReserveProductsResponse {
+  bool success = 1;
+  string reservation_id = 2;
+  repeated ProductAvailability reserved_items = 3;
+  optional Error error = 4;
+}
+
+message ConfirmReservationResponse {
+  bool success = 1;
+  optional Error error = 2;
+}
+
+message CancelReservationResponse {
+  bool success = 1;
+  optional Error error = 2;
+}
+
+// Error message
+message Error {
+  string code = 1;
+  string message = 2;
+  map<string, string> details = 3;
+} 

@@ -1,0 +1,85 @@
+# Overview  
+**Nền tảng E-commerce cho Sản phẩm Số** is a modern, high-performance web application designed to facilitate the buying and selling of digital products such as software licenses, streaming service accounts (Netflix), development tools (GitHub), and other digital keys/accounts. 
+
+The platform addresses the growing market demand for a secure, reliable, and user-friendly marketplace for digital products. It solves the problem of fragmented, unsafe digital product marketplaces by providing a centralized, trustworthy platform that ensures both buyer security and seller reliability.
+
+The platform is valuable because it:
+- Provides instant delivery of digital products upon payment
+- Ensures security and authenticity of digital keys/accounts
+- Offers automated customer support through AI integration
+- Creates a seamless user experience for both buyers and administrators
+
+# Core Features  
+
+## 1. Customer-Facing Platform (Client)
+**What it does:** Provides a complete e-commerce experience for digital product purchases
+**Why it's important:** Enables customers to easily discover, purchase, and manage their digital products
+**How it works:** 
+- Modern web interface with product catalogs, search/filter functionality
+- Secure user registration and authentication
+- Shopping cart and integrated payment processing
+- Instant product delivery system
+- Personal account management with purchase history
+
+## 2. Administrative Management System (Admin)
+**What it does:** Comprehensive backend management for platform operations
+**Why it's important:** Enables efficient management of products, inventory, orders, and users
+**How it works:**
+- Dashboard with real-time analytics and KPIs
+- Product and category management
+- Inventory management for digital keys/accounts
+- Order processing and status tracking
+- User management and content administration
+
+## 3. AI-Powered Customer Support (RAG Chatbot)
+**What it does:** Provides intelligent, automated customer support using AI
+**Why it's important:** Reduces support costs while improving customer experience 24/7
+**How it works:**
+- Retrieval-Augmented Generation (RAG) using OpenAI
+- Vector database for chunked knowledge base
+- Real-time chat interface integrated into the platform
+- Answers questions about products, usage, policies, and troubleshooting
+
+## 4. Secure Payment Processing
+**What it does:** Handles secure financial transactions for digital product purchases
+**Why it's important:** Ensures safe, reliable payment processing with multiple options
+**How it works:**
+- Integration with popular Vietnamese payment gateways (Momo, VNPay)
+- Support for international payment methods
+- HTTPS encryption and secure transaction processing
+
+# User Experience  
+
+## User Personas
+
+### Primary: Digital Product Buyers (Clients)
+- **Demographics:** Tech-savvy individuals, students, professionals, small business owners
+- **Goals:** Find authentic digital products at competitive prices with instant delivery
+- **Pain Points:** Concerns about product authenticity, security, and reliable delivery
+- **Behavior:** Price-conscious, values convenience and security
+
+### Secondary: Platform Administrators (Admins)
+- **Demographics:** Business operators, technical managers
+- **Goals:** Efficiently manage platform operations, maximize sales, minimize manual work
+- **Pain Points:** Manual inventory management, customer support overhead, sales tracking complexity
+- **Behavior:** Data-driven, efficiency-focused, needs comprehensive oversight tools
+
+## Key User Flows
+
+### Customer Purchase Journey
+1. **Discovery:** Browse homepage → explore categories → use search/filters
+2. **Evaluation:** View product details → read reviews → check availability
+3. **Purchase:** Add to cart → secure checkout → payment processing
+4. **Fulfillment:** Instant key/account delivery → account management → support if needed
+
+### Admin Management Flow
+1. **Inventory Management:** Import digital products → set pricing → monitor stock levels
+2. **Order Processing:** Monitor new orders → automated fulfillment → handle exceptions
+3. **Analytics Review:** Dashboard overview → sales reports → user analytics → business insights
+
+## UI/UX Considerations
+- **Visual Design:** Clean, modern, professional aesthetic with subtle animations
+- **Performance:** Sub-3-second page loads, sub-200ms API responses
+- **Accessibility:** Mobile-responsive design, intuitive navigation
+- **Trust Building:** Security indicators, customer reviews, clear policies
+- **Conversion Optimization:** Streamlined checkout, multiple payment options, instant delivery confirmation

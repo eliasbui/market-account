@@ -1,0 +1,236 @@
+syntax = "proto3";
+
+package payment.v1;
+
+option go_package = "user-service/proto/payment;paymentpb";
+option csharp_namespace = "ProductService.Proto.Payment";
+option java_package = "com.marketplace.payment.v1";
+
+// Payment service definition for internal microservice communication
+service PaymentService {
+  // Create a new payment
+  rpc CreatePayment (CreatePaymentRequest) returns (CreatePaymentResponse);
+  
+  // Get payment by ID
+  rpc GetPayment (GetPaymentRequest) returns (GetPaymentResponse);
+  
+  // Get payments by user ID
+  rpc GetUserPayments (GetUserPaymentsRequest) returns (GetUserPaymentsResponse);
+  
+  // Get payments by order ID
+  rpc GetOrderPayments (GetOrderPaymentsRequest) returns (GetOrderPaymentsResponse);
+  
+  // Process payment (initiate payment with provider)
+  rpc ProcessPayment (ProcessPaymentRequest) returns (ProcessPaymentResponse);
+  
+  // Confirm payment (mark as completed)
+  rpc ConfirmPayment (ConfirmPaymentRequest) returns (ConfirmPaymentResponse);
+  
+  // Cancel payment
+  rpc CancelPayment (CancelPaymentRequest) returns (CancelPaymentResponse);
+  
+  // Refund payment
+  rpc RefundPayment (RefundPaymentRequest) returns (RefundPaymentResponse);
+  
+  // Update payment status (webhook handling)
+  rpc UpdatePaymentStatus (UpdatePaymentStatusRequest) returns (UpdatePaymentStatusResponse);
+  
+  // Validate payment provider
+  rpc ValidatePaymentProvider (ValidatePaymentProviderRequest) returns (ValidatePaymentProviderResponse);
+}
+
+// Payment status enum
+enum PaymentStatus {
+  PAYMENT_STATUS_UNSPECIFIED = 0;
+  PAYMENT_STATUS_PENDING = 1;
+  PAYMENT_STATUS_PROCESSING = 2;
+  PAYMENT_STATUS_COMPLETED = 3;
+  PAYMENT_STATUS_FAILED = 4;
+  PAYMENT_STATUS_CANCELLED = 5;
+  PAYMENT_STATUS_REFUNDED = 6;
+}
+
+// Payment method enum
+enum PaymentMethod {
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+  PAYMENT_METHOD_CREDIT_CARD = 1;
+  PAYMENT_METHOD_DEBIT_CARD = 2;
+  PAYMENT_METHOD_BANK_TRANSFER = 3;
+  PAYMENT_METHOD_DIGITAL_WALLET = 4;
+  PAYMENT_METHOD_CRYPTO = 5;
+}
+
+// Payment entity
+message Payment {
+  string id = 1;
+  string order_id = 2;
+  string user_id = 3;
+  double amount = 4;
+  string currency = 5;
+  PaymentMethod payment_method = 6;
+  PaymentStatus status = 7;
+  string provider_transaction_id = 8;
+  int64 created_at = 9; // Unix timestamp
+  int64 updated_at = 10; // Unix timestamp
+  optional int64 completed_at = 11; // Unix timestamp
+  optional string failure_reason = 12;
+  optional double refund_amount = 13;
+  map<string, string> metadata = 14; // Additional payment data
+}
+
+// Payment provider entity
+message PaymentProvider {
+  string id = 1;
+  string name = 2;
+  repeated PaymentMethod supported_methods = 3;
+  repeated string supported_currencies = 4;
+  bool is_active = 5;
+  string api_endpoint = 6;
+  double fee_percentage = 7;
+  map<string, string> configuration = 8; // Provider-specific config
+}
+
+// Pagination
+message Pagination {
+  int32 page = 1;
+  int32 limit = 2;
+  int32 total = 3;
+  int32 total_pages = 4;
+}
+
+// Request messages
+message CreatePaymentRequest {
+  string order_id = 1;
+  string user_id = 2;
+  double amount = 3;
+  string currency = 4;
+  PaymentMethod payment_method = 5;
+  map<string, string> metadata = 6;
+}
+
+message GetPaymentRequest {
+  string id = 1;
+}
+
+message GetUserPaymentsRequest {
+  string user_id = 1;
+  optional Pagination pagination = 2;
+  optional PaymentStatus status = 3;
+}
+
+message GetOrderPaymentsRequest {
+  string order_id = 1;
+}
+
+message ProcessPaymentRequest {
+  string payment_id = 1;
+  string provider_id = 2;
+  map<string, string> payment_details = 3; // Card info, wallet details, etc.
+}
+
+message ConfirmPaymentRequest {
+  string payment_id = 1;
+  string provider_transaction_id = 2;
+}
+
+message CancelPaymentRequest {
+  string payment_id = 1;
+  optional string reason = 2;
+}
+
+message RefundPaymentRequest {
+  string payment_id = 1;
+  optional double amount = 2; // Partial refund amount, if not provided, full refund
+  optional string reason = 3;
+}
+
+message UpdatePaymentStatusRequest {
+  string payment_id = 1;
+  PaymentStatus status = 2;
+  optional string provider_transaction_id = 3;
+  optional string failure_reason = 4;
+  map<string, string> provider_data = 5; // Webhook data from provider
+}
+
+message ValidatePaymentProviderRequest {
+  string provider_id = 1;
+  PaymentMethod payment_method = 2;
+  string currency = 3;
+}
+
+// Response messages
+message CreatePaymentResponse {
+  oneof result {
+    Payment payment = 1;
+    Error error = 2;
+  }
+}
+
+message GetPaymentResponse {
+  oneof result {
+    Payment payment = 1;
+    Error error = 2;
+  }
+}
+
+message GetUserPaymentsResponse {
+  repeated Payment payments = 1;
+  optional Pagination pagination = 2;
+  optional Error error = 3;
+}
+
+message GetOrderPaymentsResponse {
+  repeated Payment payments = 1;
+  optional Error error = 2;
+}
+
+message ProcessPaymentResponse {
+  oneof result {
+    Payment payment = 1;
+    Error error = 2;
+  }
+  optional string redirect_url = 3; // For 3D Secure or external redirect
+  optional string provider_reference = 4;
+}
+
+message ConfirmPaymentResponse {
+  oneof result {
+    Payment payment = 1;
+    Error error = 2;
+  }
+}
+
+message CancelPaymentResponse {
+  oneof result {
+    Payment payment = 1;
+    Error error = 2;
+  }
+}
+
+message RefundPaymentResponse {
+  oneof result {
+    Payment payment = 1;
+    Error error = 2;
+  }
+  optional string refund_reference = 3;
+}
+
+message UpdatePaymentStatusResponse {
+  oneof result {
+    Payment payment = 1;
+    Error error = 2;
+  }
+}
+
+message ValidatePaymentProviderResponse {
+  bool is_valid = 1;
+  optional PaymentProvider provider = 2;
+  optional Error error = 3;
+}
+
+// Error message
+message Error {
+  string code = 1;
+  string message = 2;
+  map<string, string> details = 3;
+} 

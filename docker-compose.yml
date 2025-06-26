@@ -1,0 +1,156 @@
+version: '3.8'
+
+services:
+  # Database Services
+  postgres:
+    image: postgres:15-alpine
+    container_name: marketplace-postgres
+    environment:
+      POSTGRES_DB: marketplace
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - marketplace-network
+
+  cassandra:
+    image: cassandra:4.1
+    container_name: marketplace-cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=MarketplaceCluster
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_RACK=rack1
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+    networks:
+      - marketplace-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: marketplace-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - marketplace-network
+
+  # Message Queue
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: marketplace-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+    ports:
+      - "5672:5672"    # AMQP port
+      - "15672:15672"  # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - marketplace-network
+
+  # Microservices
+  user-service:
+    build: 
+      context: ./services/user-service-go
+      dockerfile: Dockerfile
+    container_name: user-service
+    ports:
+      - "8001:8001"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=marketplace
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - marketplace-network
+
+  product-service:
+    build:
+      context: ./services/product-service-dotnet
+      dockerfile: Dockerfile
+    container_name: product-service
+    ports:
+      - "8002:8002"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=marketplace;Username=postgres;Password=postgres
+      - Redis__ConnectionString=redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - marketplace-network
+
+  payment-service:
+    build:
+      context: ./services/payment-service-python
+      dockerfile: Dockerfile
+    container_name: payment-service
+    ports:
+      - "8003:8003"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/marketplace
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://admin:admin123@rabbitmq:5672/
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    networks:
+      - marketplace-network
+
+  api-gateway:
+    build:
+      context: ./services/api-gateway-node
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8000:8000"  # Main GraphQL API
+      - "4000:4000"  # GraphQL Playground
+    environment:
+      - NODE_ENV=development
+      - USER_SERVICE_URL=http://user-service:8001
+      - PRODUCT_SERVICE_URL=http://product-service:8002
+      - PAYMENT_SERVICE_URL=http://payment-service:8003
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - user-service
+      - product-service
+      - payment-service
+      - redis
+    networks:
+      - marketplace-network
+
+  # Development Tools
+  adminer:
+    image: adminer:4.8.1
+    container_name: marketplace-adminer
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    networks:
+      - marketplace-network
+
+volumes:
+  postgres_data:
+  cassandra_data:
+  redis_data:
+  rabbitmq_data:
+
+networks:
+  marketplace-network:
+    driver: bridge 

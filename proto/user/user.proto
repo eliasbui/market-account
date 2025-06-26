@@ -1,0 +1,122 @@
+syntax = "proto3";
+
+package user.v1;
+
+option go_package = "user-service/proto/user;userpb";
+option csharp_namespace = "ProductService.Proto.User";
+option java_package = "com.marketplace.user.v1";
+
+// User service definition for internal microservice communication
+service UserService {
+  // Create a new user
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+  
+  // Get user by ID
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  
+  // Get user by email
+  rpc GetUserByEmail (GetUserByEmailRequest) returns (GetUserResponse);
+  
+  // Update user information
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+  
+  // Delete user
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+  
+  // Validate user credentials (for authentication)
+  rpc ValidateUser (ValidateUserRequest) returns (ValidateUserResponse);
+  
+  // Get multiple users by IDs (batch operation)
+  rpc GetUsers (GetUsersRequest) returns (GetUsersResponse);
+}
+
+// User entity
+message User {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  bool is_active = 4;
+  int64 created_at = 5; // Unix timestamp
+  int64 updated_at = 6; // Unix timestamp
+  repeated string roles = 7; // User roles
+}
+
+// Request messages
+message CreateUserRequest {
+  string email = 1;
+  string username = 2;
+  string password = 3;
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  optional string email = 2;
+  optional string username = 3;
+  optional bool is_active = 4;
+}
+
+message DeleteUserRequest {
+  string id = 1;
+}
+
+message ValidateUserRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message GetUsersRequest {
+  repeated string ids = 1;
+}
+
+// Response messages
+message CreateUserResponse {
+  oneof result {
+    User user = 1;
+    Error error = 2;
+  }
+}
+
+message GetUserResponse {
+  oneof result {
+    User user = 1;
+    Error error = 2;
+  }
+}
+
+message UpdateUserResponse {
+  oneof result {
+    User user = 1;
+    Error error = 2;
+  }
+}
+
+message DeleteUserResponse {
+  bool success = 1;
+  optional Error error = 2;
+}
+
+message ValidateUserResponse {
+  bool is_valid = 1;
+  optional User user = 2;
+  optional Error error = 3;
+}
+
+message GetUsersResponse {
+  repeated User users = 1;
+  optional Error error = 2;
+}
+
+// Error message
+message Error {
+  string code = 1;
+  string message = 2;
+  map<string, string> details = 3;
+} 

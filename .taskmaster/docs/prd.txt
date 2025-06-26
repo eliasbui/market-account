@@ -1,0 +1,581 @@
+# Product Requirements Document (PRD): Digital E-commerce Platform
+
+**Version:** 1.0  
+**Date:** June 27, 2025  
+**Author:** Development Team  
+**Status:** Draft  
+
+---
+
+## 1. Overview and Vision
+
+### 1.1. Project Summary
+Build a modern, high-performance web application specializing in digital products and services such as software licenses, streaming service accounts (Netflix), development tools (GitHub), and other digital keys/accounts. The platform will serve two primary user groups: customers (Client) and administrators (Admin).
+
+### 1.2. Product Vision
+To become a leading, trusted, secure, and convenient platform for buying and selling digital products. The platform will provide an excellent user experience and powerful administrative system, addressing the growing market demand for a reliable digital marketplace.
+
+### 1.3. Business Objectives
+- Build a stable, highly scalable platform
+- Optimize purchase conversion rates
+- Reduce customer support costs through AI automation
+- Ensure security and safety for both buyers and the system
+- Provide instant delivery of digital products upon payment
+- Create a seamless user experience for both buyers and administrators
+
+---
+
+## 2. User Personas
+
+### 2.1. Primary: Digital Product Buyers (Clients)
+- **Demographics:** Tech-savvy individuals, students, professionals, small business owners aged 18-45
+- **Description:** Users who need to purchase keys and accounts for personal or professional use
+- **Goals:** 
+  - Find authentic digital products at competitive prices
+  - Easy product discovery and purchase process
+  - Fast, secure payment processing
+  - Instant delivery of keys/accounts
+  - Reliable customer support
+- **Pain Points:** 
+  - Concerns about product authenticity and security
+  - Unreliable delivery systems
+  - Complex checkout processes
+  - Poor customer support
+- **Behavior:** Price-conscious, values convenience and security, researches before purchasing
+
+### 2.2. Secondary: Platform Administrators (Admins)
+- **Demographics:** Business operators, technical managers, e-commerce professionals
+- **Description:** Personnel responsible for managing the entire system operation
+- **Goals:**
+  - Efficiently manage products, inventory, and orders
+  - Monitor business metrics and performance
+  - Minimize manual work through automation
+  - Ensure platform security and reliability
+- **Pain Points:**
+  - Manual inventory management complexity
+  - Customer support overhead
+  - Sales tracking and analytics challenges
+  - Order processing inefficiencies
+- **Behavior:** Data-driven, efficiency-focused, needs comprehensive oversight tools
+
+---
+
+## 3. Functional Requirements
+
+### 3.1. Customer-Facing Platform (Client)
+
+#### 3.1.1. User Authentication & Registration
+- **User Registration:**
+  - Email/password registration system
+  - Email verification process
+  - Social login options (Google, Facebook)
+- **User Login:**
+  - Secure authentication with session management
+  - Remember me functionality
+  - Password reset via email
+- **Account Security:**
+  - Password strength requirements
+  - Account lockout after failed attempts
+  - Two-factor authentication (optional)
+
+#### 3.1.2. Homepage & Navigation
+- **Homepage Features:**
+  - Featured products carousel
+  - New arrivals section
+  - Promotional banners and deals
+  - Category highlights
+  - Modern animations and transitions
+- **Navigation:**
+  - Intuitive menu structure
+  - Search functionality with autocomplete
+  - Shopping cart icon with item count
+  - User account dropdown
+
+#### 3.1.3. Product Discovery & Browsing
+- **Product Categories:**
+  - Streaming Services (Netflix, Disney+, Spotify, etc.)
+  - Software & Tools (Microsoft Office, Adobe, etc.)
+  - Development Tools (GitHub, hosting services, etc.)
+  - Gaming (Steam keys, game accounts, etc.)
+  - Educational (online courses, learning platforms)
+- **Search & Filtering:**
+  - Advanced search with multiple criteria
+  - Price range filters
+  - Category and subcategory filters
+  - Popularity and rating filters
+  - Sort options (price, popularity, newest)
+- **Product Listing:**
+  - Grid and list view options
+  - Pagination or infinite scroll
+  - Quick view functionality
+  - Add to cart from listing page
+
+#### 3.1.4. Product Details
+- **Product Information:**
+  - High-quality product images/logos
+  - Detailed descriptions and specifications
+  - Pricing and availability status
+  - Usage instructions and requirements
+  - Warranty and support policies
+- **Social Proof:**
+  - Customer reviews and ratings
+  - Purchase history indicators
+  - Related product suggestions
+- **Purchase Actions:**
+  - Add to cart functionality
+  - Buy now option
+  - Wishlist/favorites
+  - Share product functionality
+
+#### 3.1.5. Shopping Cart & Checkout
+- **Shopping Cart:**
+  - Add/remove products
+  - Quantity adjustments
+  - Price calculations with taxes
+  - Save for later functionality
+- **Checkout Process:**
+  - Guest checkout option
+  - Shipping information (for physical receipts)
+  - Payment method selection
+  - Order review and confirmation
+  - Promotional code application
+- **Payment Integration:**
+  - Vietnamese payment gateways (Momo, VNPay, ZaloPay)
+  - International payment methods (Stripe, PayPal)
+  - Cryptocurrency options (Bitcoin, USDT)
+  - Secure payment processing with HTTPS
+
+#### 3.1.6. Account Management
+- **Personal Dashboard:**
+  - Account overview and statistics
+  - Purchase history with search/filter
+  - Downloaded products and keys
+  - Account settings and preferences
+- **Order Management:**
+  - Order status tracking
+  - Digital product downloads
+  - Invoice and receipt access
+  - Redownload functionality
+- **Profile Management:**
+  - Personal information updates
+  - Password change
+  - Notification preferences
+  - Account deletion option
+
+### 3.2. Administrative Management System (Admin)
+
+#### 3.2.1. Dashboard & Analytics
+- **Overview Dashboard:**
+  - Real-time sales metrics
+  - Revenue charts and graphs
+  - New orders and customers
+  - Inventory alerts
+  - Performance KPIs
+- **Analytics & Reporting:**
+  - Sales reports by date, product, category
+  - Customer analytics and behavior
+  - Inventory turnover reports
+  - Payment method performance
+  - Export functionality for reports
+
+#### 3.2.2. Product Management
+- **Product Catalog:**
+  - Add/edit/delete products
+  - Bulk product operations
+  - Product categorization
+  - SEO optimization fields
+- **Inventory Management:**
+  - Digital key/account import (CSV, Excel)
+  - Stock level monitoring
+  - Automatic low-stock alerts
+  - Expired product management
+- **Pricing & Promotions:**
+  - Dynamic pricing controls
+  - Discount and coupon management
+  - Bulk pricing updates
+  - Promotional campaign scheduling
+
+#### 3.2.3. Order Management
+- **Order Processing:**
+  - Order queue management
+  - Automatic fulfillment system
+  - Manual order processing
+  - Order status updates
+- **Order Tracking:**
+  - Comprehensive order search
+  - Filter by status, date, customer
+  - Order details and history
+  - Refund and cancellation handling
+- **Customer Communication:**
+  - Automated email notifications
+  - Order confirmation and delivery
+  - Customer support ticket integration
+
+#### 3.2.4. User Management
+- **Customer Management:**
+  - User account overview
+  - Purchase history access
+  - Account status management
+  - Suspicious activity monitoring
+- **Admin User Management:**
+  - Role-based access control
+  - Admin account creation/deletion
+  - Permission management
+  - Activity logging
+
+#### 3.2.5. Content Management
+- **Knowledge Base:**
+  - FAQ management
+  - Product guides and tutorials
+  - Policy and terms management
+  - Content for AI chatbot training
+- **Website Content:**
+  - Homepage content updates
+  - Banner and promotion management
+  - Category descriptions
+  - SEO content optimization
+
+### 3.3. AI-Powered Customer Support (RAG Chatbot)
+
+#### 3.3.1. Chat Interface
+- **User Interface:**
+  - Floating chat widget
+  - Full-screen chat option
+  - Mobile-responsive design
+  - Typing indicators and status
+- **Chat Features:**
+  - Real-time messaging
+  - File attachment support
+  - Chat history persistence
+  - Escalation to human support
+
+#### 3.3.2. AI Capabilities
+- **RAG Implementation:**
+  - OpenAI GPT integration
+  - Vector database for knowledge storage
+  - Document chunking and indexing
+  - Semantic search capabilities
+- **Knowledge Base:**
+  - Product information and specifications
+  - Usage instructions and troubleshooting
+  - Policy and warranty information
+  - Common customer questions and answers
+- **Response Quality:**
+  - Context-aware responses
+  - Multilingual support (Vietnamese/English)
+  - Confidence scoring
+  - Fallback to human agents
+
+#### 3.3.3. Analytics & Improvement
+- **Chat Analytics:**
+  - Conversation success rates
+  - Common query patterns
+  - Response accuracy metrics
+  - User satisfaction scores
+- **Continuous Learning:**
+  - Feedback collection
+  - Knowledge base updates
+  - Performance monitoring
+  - Model fine-tuning
+
+---
+
+## 4. Non-Functional Requirements
+
+### 4.1. Architecture & Technology Stack
+
+#### 4.1.1. Backend Architecture (Microservices & Clean Architecture)
+- **Overall Architecture:**
+  - Complete microservices architecture
+  - Each microservice follows Clean Architecture principles
+  - Ensures independence, maintainability, testability, and scalability
+  
+- **Clean Architecture Structure per Microservice:**
+  - **Entities:** Core business objects and enterprise-wide business rules
+  - **Use Cases:** Application-specific business logic and data flow coordination
+  - **Interface Adapters:** Data format conversion layer (Controllers, Presenters, Gateways)
+  - **Frameworks & Drivers:** External concerns (Database, Web Framework, UI)
+
+- **Polyglot Programming:**
+  - **Go:** High-performance services (API Gateway, Order Service, Payment Service)
+  - **C# (.NET):** Complex business logic services (Product Catalog, User Management)
+  - **Python:** AI/RAG services, data processing tasks
+  - **Node.js/Bun.js:** Real-time services (WebSocket notifications, chat)
+
+- **Service Communication:**
+  - gRPC for internal service communication
+  - REST APIs for external integrations
+  - Event-driven architecture with message queues
+
+#### 4.1.2. Database Strategy
+- **PostgreSQL:**
+  - **Use Cases:** Structured data requiring ACID compliance
+  - **Tables:** Users, Products, Orders, Payments, Categories
+  - **Features:** Transactions, referential integrity, complex queries
+  
+- **Apache Cassandra:**
+  - **Use Cases:** High-volume writes, high availability requirements
+  - **Tables:** Inventory (millions of keys/accounts), Activity Logs, User Sessions
+  - **Features:** Horizontal scaling, eventual consistency, high throughput
+
+- **Redis:**
+  - **Use Cases:** Caching, session storage, real-time data
+  - **Features:** In-memory storage, pub/sub messaging, TTL support
+
+#### 4.1.3. Frontend Architecture
+- **Framework:** React.js with TypeScript for type safety
+- **State Management:** Redux Toolkit for complex state management
+- **API Communication:** GraphQL as API Gateway for efficient data fetching
+- **Styling:** Tailwind CSS for utility-first styling
+- **Build Tools:** Vite for fast development and building
+
+### 4.2. UI/UX and Design Requirements
+
+#### 4.2.1. Design Principles
+- **Visual Design:**
+  - Clean, modern, and professional aesthetic
+  - Consistent color scheme and typography
+  - Responsive design for all devices
+  - Accessibility compliance (WCAG 2.1)
+
+- **User Experience:**
+  - Intuitive navigation and information architecture
+  - Fast loading times and smooth interactions
+  - Clear call-to-action buttons
+  - Error handling and user feedback
+
+#### 4.2.2. Animation and Interactions
+- **Subtle Animations:**
+  - Page transitions and micro-interactions
+  - Loading states and progress indicators
+  - Hover effects and button animations
+  - Chart animations in admin dashboard
+
+- **Performance Considerations:**
+  - 60fps animations
+  - Reduced motion for accessibility
+  - Optimized asset loading
+  - Progressive enhancement
+
+### 4.3. Performance and Security Requirements
+
+#### 4.3.1. Performance Metrics
+- **Frontend Performance:**
+  - Page load time < 3 seconds
+  - First Contentful Paint < 1.5 seconds
+  - Largest Contentful Paint < 2.5 seconds
+  - Cumulative Layout Shift < 0.1
+
+- **Backend Performance:**
+  - API response time < 200ms
+  - Database query time < 100ms
+  - 99.9% uptime availability
+  - Support for 10,000+ concurrent users
+
+#### 4.3.2. Security Requirements
+- **Authentication & Authorization:**
+  - JWT-based authentication
+  - Role-based access control (RBAC)
+  - Session management and timeout
+  - Multi-factor authentication (MFA)
+
+- **Data Protection:**
+  - Password hashing (bcrypt/Argon2)
+  - Data encryption at rest and in transit
+  - PCI DSS compliance for payments
+  - GDPR compliance for user data
+
+- **Security Measures:**
+  - Protection against common attacks (XSS, CSRF, SQL Injection)
+  - Rate limiting and DDoS protection
+  - Input validation and sanitization
+  - Security headers and HTTPS enforcement
+
+#### 4.3.3. Monitoring and Logging
+- **Application Monitoring:**
+  - Real-time error tracking
+  - Performance monitoring
+  - User behavior analytics
+  - Business metrics tracking
+
+- **Logging Strategy:**
+  - Centralized logging system
+  - Structured logging format
+  - Log retention policies
+  - Security event logging
+
+---
+
+## 5. Key User Flows
+
+### 5.1. Customer Purchase Journey
+1. **Discovery Phase:**
+   - User visits homepage
+   - Browses featured products or categories
+   - Uses search functionality
+   - Applies filters to narrow results
+
+2. **Evaluation Phase:**
+   - Views product details
+   - Reads customer reviews
+   - Checks availability and pricing
+   - Compares with similar products
+
+3. **Purchase Phase:**
+   - Adds product to cart
+   - Proceeds to checkout
+   - Enters billing information
+   - Selects payment method
+   - Completes payment
+
+4. **Fulfillment Phase:**
+   - Receives order confirmation
+   - Gets instant delivery of digital product
+   - Accesses product in account dashboard
+   - Contacts support if needed
+
+### 5.2. Admin Management Flow
+1. **Inventory Management:**
+   - Imports digital products in bulk
+   - Sets pricing and product details
+   - Monitors stock levels
+   - Receives low-stock alerts
+
+2. **Order Processing:**
+   - Monitors new orders dashboard
+   - Reviews automatic fulfillment
+   - Handles exceptional cases
+   - Processes refunds if needed
+
+3. **Analytics Review:**
+   - Checks daily/weekly dashboards
+   - Analyzes sales performance
+   - Reviews customer metrics
+   - Generates business reports
+
+---
+
+## 6. Assumptions and Constraints
+
+### 6.1. Assumptions
+- **Technology:**
+  - "grap" in requirements refers to GraphQL API Gateway
+  - Third-party payment gateways provide reliable APIs
+  - AI services (OpenAI) maintain consistent availability
+  - Cloud infrastructure provides necessary scalability
+
+- **Business:**
+  - Digital product suppliers provide authentic products
+  - Vietnamese payment methods are primary focus
+  - Customers have basic technical literacy
+  - Market demand exists for digital products
+
+### 6.2. Constraints and Limitations
+- **Technical Constraints:**
+  - Budget limitations for cloud infrastructure
+  - Third-party API rate limits
+  - Compliance requirements for financial transactions
+  - Database storage costs for large inventories
+
+- **Business Constraints:**
+  - Legal restrictions on certain digital products
+  - Payment gateway regional limitations
+  - Customer support availability hours
+  - Inventory supplier relationships
+
+### 6.3. Out of Scope for v1.0
+- **Features Not Included:**
+  - Complex social features (user-to-user chat)
+  - Affiliate marketing system
+  - Multi-language support (Vietnamese only initially)
+  - Advanced analytics and BI tools
+  - Mobile applications (web-responsive only)
+  - Subscription management for recurring products
+  - Advanced fraud detection systems
+  - Integration with external CRM systems
+
+---
+
+## 7. Success Metrics and KPIs
+
+### 7.1. Business Metrics
+- **Revenue Metrics:**
+  - Monthly Recurring Revenue (MRR)
+  - Average Order Value (AOV)
+  - Customer Lifetime Value (CLV)
+  - Conversion rate optimization
+
+- **Customer Metrics:**
+  - Customer acquisition cost (CAC)
+  - Customer satisfaction score (CSAT)
+  - Net Promoter Score (NPS)
+  - Customer retention rate
+
+### 7.2. Technical Metrics
+- **Performance Metrics:**
+  - Application response times
+  - System uptime and availability
+  - Error rates and resolution times
+  - Database performance metrics
+
+- **User Experience Metrics:**
+  - Page load times
+  - User engagement metrics
+  - Feature adoption rates
+  - Support ticket volume
+
+---
+
+## 8. Risk Assessment and Mitigation
+
+### 8.1. Technical Risks
+- **Risk:** Service downtime during peak traffic
+  - **Mitigation:** Auto-scaling, load balancing, circuit breakers
+- **Risk:** Data loss or corruption
+  - **Mitigation:** Regular backups, disaster recovery plan
+- **Risk:** Security breaches
+  - **Mitigation:** Security audits, penetration testing, compliance
+
+### 8.2. Business Risks
+- **Risk:** Payment processing failures
+  - **Mitigation:** Multiple payment providers, error handling
+- **Risk:** Inventory management issues
+  - **Mitigation:** Automated systems, real-time monitoring
+- **Risk:** Customer support overload
+  - **Mitigation:** AI chatbot, self-service options, escalation procedures
+
+---
+
+## 9. Implementation Timeline
+
+### 9.1. Phase 1: Foundation (Months 1-3)
+- Core microservices architecture
+- Database setup and basic CRUD operations
+- User authentication and authorization
+- Basic admin panel
+
+### 9.2. Phase 2: Core Features (Months 4-6)
+- Product catalog and inventory management
+- Shopping cart and checkout process
+- Payment gateway integration
+- Order processing system
+
+### 9.3. Phase 3: Advanced Features (Months 7-9)
+- AI chatbot implementation
+- Advanced admin analytics
+- Performance optimization
+- Security enhancements
+
+### 9.4. Phase 4: Launch Preparation (Months 10-12)
+- User acceptance testing
+- Performance testing and optimization
+- Security audits and compliance
+- Production deployment and monitoring
+
+---
+
+## 10. Conclusion
+
+This Product Requirements Document outlines a comprehensive digital e-commerce platform that addresses the growing market for digital products. The platform combines modern technology architecture with user-centric design to create a secure, scalable, and efficient marketplace for both buyers and sellers of digital products.
+
+The success of this platform will depend on careful implementation of the microservices architecture, robust security measures, and continuous optimization based on user feedback and market demands.

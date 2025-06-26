@@ -1,0 +1,230 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Setup Microservices Architecture Foundation",
+        "description": "Establish the core microservices architecture with Clean Architecture principles, polyglot programming setup, and service communication infrastructure",
+        "details": "Create project structure for microservices using Go, C#/.NET, Python, and Node.js/Bun.js. Implement Clean Architecture layers (Entities, Use Cases, Interface Adapters, Frameworks & Drivers) for each service. Setup gRPC for internal communication, REST APIs for external integrations, and message queues for event-driven architecture. Configure Docker containers and docker-compose for local development. Implement API Gateway using GraphQL with proper routing and load balancing.",
+        "testStrategy": "Unit tests for each Clean Architecture layer, integration tests for gRPC communication, load testing for API Gateway, and end-to-end tests for service orchestration",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Establish Project Structure and Implement Clean Architecture Layers",
+            "description": "Set up the foundational project structure for each microservice using Go, C#/.NET, Python, and Node.js/Bun.js, adhering to Clean Architecture principles by defining Entities, Use Cases, Interface Adapters, and Frameworks & Drivers layers.",
+            "dependencies": [],
+            "details": "For each microservice, create a directory structure that includes separate packages or modules for entities, use cases, interface adapters, and frameworks & drivers. This organization ensures a clear separation of concerns and maintainability. ([medium.com](https://medium.com/%40rudrakshnanavaty/implementing-clean-architecture-in-go-5f06dd8c1596?utm_source=openai))\n<info added on 2025-06-26T17:21:25.808Z>\nSuccessfully implemented the foundational Clean Architecture structure for all four microservices:\n\n**Go User Service (Clean Architecture Layers)**:\n- Domain layer: User entity with validation methods\n- Application layer: UserService with business logic and UserRepository interface  \n- Infrastructure layer: PostgresUserRepository implementation\n- Web layer: HTTP handlers using Gin framework\n- Main.go: Dependency injection and service bootstrap\n\n**C#/.NET Product Service (Clean Architecture Layers)**:\n- Solution structure with separate projects for each layer\n- Domain layer: Product entity with business methods\n- Proper namespace organization following .NET conventions\n\n**Python Payment Service (Clean Architecture Layers)**:\n- Domain layer: Payment and PaymentProvider models with enums\n- Clean separation using dataclasses and type hints\n- Business logic embedded in domain entities\n\n**Node.js API Gateway (Clean Architecture Layers)**:\n- Comprehensive GraphQL schema covering all microservices\n- TypeDefs for User, Product, and Payment domains\n- Mutation and Query definitions\n- Real-time subscription support\n\n**Infrastructure Setup**:\n- Complete Docker Compose configuration with PostgreSQL, Cassandra, Redis databases, RabbitMQ message queue, all four microservices with proper networking, and development tools (Adminer for DB management)\n\n**Architecture Compliance**:\n- Each service follows language-specific conventions while maintaining Clean Architecture principles\n- Proper dependency direction (Domain ← Application ← Infrastructure ← Web)\n- Interface-based abstractions for testability\n- Domain entities contain business logic\n- Clear separation of concerns across all layers\n\nThe foundation is now ready for implementing gRPC communication, REST APIs, and message queues in the next subtasks.\n</info added on 2025-06-26T17:21:25.808Z>",
+            "status": "done",
+            "testStrategy": "Verify that each layer is correctly implemented by writing unit tests for individual components and integration tests to ensure proper interaction between layers."
+          },
+          {
+            "id": 2,
+            "title": "Set Up gRPC for Internal Service Communication",
+            "description": "Implement gRPC for efficient internal communication between microservices, utilizing Protocol Buffers for defining service contracts and generating client and server code in the respective programming languages.",
+            "dependencies": [
+              1
+            ],
+            "details": "Define service contracts using Protocol Buffers (.proto files) and generate the corresponding client and server code for each microservice. This setup facilitates high-performance, language-agnostic communication between services. ([dev.to](https://dev.to/adi73/building-microservices-with-grpc-a-practical-guide-3bc5?utm_source=openai))",
+            "status": "in-progress",
+            "testStrategy": "Conduct integration tests to ensure that gRPC services can communicate correctly across different microservices, handling various scenarios and edge cases."
+          },
+          {
+            "id": 3,
+            "title": "Implement REST APIs for External Integrations",
+            "description": "Develop RESTful APIs for each microservice to handle external integrations, ensuring that each service exposes necessary endpoints for external clients to interact with.",
+            "dependencies": [
+              1
+            ],
+            "details": "Design and implement RESTful APIs for each microservice, defining clear and consistent endpoints that allow external clients to perform CRUD operations. Ensure proper validation, error handling, and authentication mechanisms are in place.",
+            "status": "pending",
+            "testStrategy": "Perform functional testing to verify that all RESTful endpoints behave as expected, including handling of valid and invalid inputs, and ensure that authentication and authorization mechanisms are effective."
+          },
+          {
+            "id": 4,
+            "title": "Set Up Message Queues for Event-Driven Architecture",
+            "description": "Configure message queues to support an event-driven architecture, enabling asynchronous communication and decoupling between microservices for improved scalability and resilience.",
+            "dependencies": [
+              2
+            ],
+            "details": "Choose a suitable message queue system (e.g., RabbitMQ, Kafka) and integrate it into the microservices to handle events and messages. Define clear message schemas and ensure that producers and consumers are correctly implemented to handle events asynchronously.",
+            "status": "pending",
+            "testStrategy": "Implement end-to-end tests to verify that messages are correctly produced, transmitted, and consumed, ensuring that the event-driven communication flows as intended under various conditions."
+          },
+          {
+            "id": 5,
+            "title": "Configure Docker Containers and Docker Compose for Local Development",
+            "description": "Set up Docker containers for each microservice and use Docker Compose to manage multi-container applications, facilitating a consistent and isolated development environment for all services.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create Dockerfiles for each microservice to containerize them, and use Docker Compose to define and run multi-container Docker applications. This setup ensures that all microservices can be developed and tested in an isolated environment that mirrors production settings.",
+            "status": "pending",
+            "testStrategy": "Test the Dockerized microservices by running them in the Docker Compose environment, ensuring that they start up correctly, communicate as expected, and handle various operational scenarios."
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Database Infrastructure Setup",
+        "description": "Configure PostgreSQL, Apache Cassandra, and Redis databases with proper schemas and connection management",
+        "details": "Setup PostgreSQL for structured data (Users, Products, Orders, Payments, Categories) with proper indexing and ACID compliance. Configure Apache Cassandra for high-volume data (Inventory keys/accounts, Activity Logs, User Sessions) with appropriate keyspaces and column families. Setup Redis for caching, session storage, and pub/sub messaging. Implement database connection pooling, migration scripts, and backup strategies. Create database abstraction layers following Clean Architecture principles.",
+        "testStrategy": "Database migration tests, connection pool stress tests, data consistency validation, backup/restore procedures testing, and performance benchmarking for each database",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "User Authentication & Authorization System",
+        "description": "Implement comprehensive user authentication with JWT, role-based access control, and security features",
+        "details": "Create User Management microservice in C#/.NET with Clean Architecture. Implement JWT-based authentication with refresh tokens, password hashing using bcrypt/Argon2, email verification, password reset functionality. Setup role-based access control (RBAC) for Client and Admin users. Implement social login (Google, Facebook), two-factor authentication (optional), account lockout after failed attempts, and session management with Redis. Add security headers, rate limiting, and HTTPS enforcement.",
+        "testStrategy": "Authentication flow testing, authorization boundary tests, security vulnerability scanning, JWT token validation tests, and penetration testing for common attacks (brute force, session hijacking)",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Product Catalog & Inventory Management System",
+        "description": "Build the core product management system with catalog, inventory tracking, and bulk operations",
+        "details": "Develop Product Catalog microservice in C#/.NET with Clean Architecture. Implement product CRUD operations, categorization (Streaming Services, Software & Tools, Development Tools, Gaming, Educational), bulk product import from CSV/Excel, inventory management for digital keys/accounts using Cassandra for high-volume storage. Add SEO optimization fields, dynamic pricing controls, stock level monitoring with automatic alerts, expired product management, and search indexing. Implement caching layer with Redis for frequently accessed products.",
+        "testStrategy": "CRUD operation tests, bulk import validation, inventory accuracy tests, search functionality testing, performance tests for high-volume inventory operations, and data consistency validation",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "React Frontend Application with TypeScript",
+        "description": "Develop the customer-facing React application with modern UI/UX, responsive design, and state management",
+        "details": "Create React.js application with TypeScript, Redux Toolkit for state management, and Tailwind CSS for styling. Implement responsive design for all devices, homepage with featured products carousel, product discovery with advanced search and filtering, product detail pages with reviews and ratings, shopping cart functionality, and user account management dashboard. Add smooth animations and micro-interactions, accessibility compliance (WCAG 2.1), and progressive web app features. Integrate with GraphQL API Gateway for efficient data fetching.",
+        "testStrategy": "Component unit tests with Jest and React Testing Library, integration tests for user flows, accessibility testing with axe-core, cross-browser compatibility testing, responsive design validation, and performance testing for Core Web Vitals",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Payment Gateway Integration System",
+        "description": "Implement secure payment processing with multiple Vietnamese and international payment methods",
+        "details": "Create Payment Service in Go for high-performance transaction processing. Integrate Vietnamese payment gateways (Momo, VNPay, ZaloPay), international methods (Stripe, PayPal), and cryptocurrency options (Bitcoin, USDT). Implement secure payment processing with PCI DSS compliance, transaction logging, refund handling, and webhook processing for payment confirmations. Add payment method validation, fraud detection basics, and secure token storage. Ensure HTTPS enforcement and data encryption for all payment data.",
+        "testStrategy": "Payment flow integration tests, security testing for PCI DSS compliance, webhook reliability tests, refund process validation, fraud detection testing, and load testing for high transaction volumes",
+        "priority": "high",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Order Processing & Fulfillment System",
+        "description": "Build automated order processing with instant digital product delivery and order management",
+        "details": "Develop Order Service in Go with Clean Architecture for high-performance order processing. Implement order queue management, automatic fulfillment system for digital products, order status tracking, and customer notification system. Create order search and filtering capabilities, refund and cancellation handling, and integration with inventory system for stock updates. Add order analytics, bulk operations for admin, and automated email notifications for order confirmation and delivery.",
+        "testStrategy": "Order processing workflow tests, automatic fulfillment validation, inventory synchronization tests, notification delivery tests, order status tracking accuracy, and stress testing for high order volumes",
+        "priority": "medium",
+        "dependencies": [
+          4,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Admin Dashboard & Analytics System",
+        "description": "Create comprehensive admin panel with real-time analytics, reporting, and management tools",
+        "details": "Build Admin Dashboard using React with TypeScript and advanced data visualization libraries (Chart.js/D3.js). Implement real-time sales metrics, revenue charts, customer analytics, inventory alerts, and performance KPIs. Create comprehensive reporting system with export functionality, user management with RBAC, content management for website updates, and promotional campaign management. Add real-time notifications, bulk operations interface, and advanced filtering/search capabilities across all admin functions.",
+        "testStrategy": "Dashboard functionality tests, real-time data accuracy validation, report generation and export tests, user permission boundary tests, bulk operation validation, and performance testing for large datasets",
+        "priority": "medium",
+        "dependencies": [
+          3,
+          4,
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "AI-Powered RAG Chatbot System",
+        "description": "Implement intelligent customer support chatbot using OpenAI GPT with vector database for knowledge retrieval",
+        "details": "Create AI Service in Python with RAG (Retrieval-Augmented Generation) implementation using OpenAI GPT integration. Setup vector database (Pinecone/Weaviate) for knowledge storage, document chunking and indexing for product information, FAQs, and policies. Implement semantic search capabilities, context-aware responses, multilingual support (Vietnamese/English), and confidence scoring. Create chat interface with real-time messaging using Node.js/Bun.js WebSocket, chat history persistence, and escalation to human support. Add conversation analytics and continuous learning capabilities.",
+        "testStrategy": "RAG accuracy testing, response quality validation, multilingual support testing, chat interface functionality tests, knowledge base retrieval accuracy, conversation flow testing, and performance testing for concurrent chat sessions",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Security Implementation & Compliance",
+        "description": "Implement comprehensive security measures, compliance requirements, and monitoring systems",
+        "details": "Implement security measures across all microservices including input validation and sanitization, protection against XSS, CSRF, and SQL injection attacks, rate limiting and DDoS protection, and security headers enforcement. Setup centralized logging system with structured logging format, security event logging, and log retention policies. Implement monitoring with real-time error tracking, performance monitoring, and security incident detection. Add GDPR compliance features for user data management and PCI DSS compliance for payment processing.",
+        "testStrategy": "Security vulnerability scanning, penetration testing, compliance audit validation, logging system tests, monitoring alert validation, and incident response procedure testing",
+        "priority": "high",
+        "dependencies": [
+          3,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Performance Optimization & Monitoring",
+        "description": "Optimize application performance and implement comprehensive monitoring and alerting systems",
+        "details": "Implement performance optimizations including database query optimization, caching strategies with Redis, CDN integration for static assets, and code splitting for frontend. Setup comprehensive monitoring with application performance monitoring (APM), real-time error tracking, user behavior analytics, and business metrics tracking. Implement auto-scaling for microservices, load balancing, circuit breakers for fault tolerance, and health checks for all services. Add performance budgets and continuous performance monitoring.",
+        "testStrategy": "Performance benchmarking, load testing for 10,000+ concurrent users, monitoring system validation, auto-scaling tests, fault tolerance testing, and Core Web Vitals validation",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          5,
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Production Deployment & DevOps Pipeline",
+        "description": "Setup production infrastructure, CI/CD pipeline, and deployment automation with monitoring",
+        "details": "Create production-ready deployment using Docker containers and Kubernetes orchestration. Setup CI/CD pipeline with automated testing, security scanning, and deployment automation. Implement infrastructure as code (Terraform/CloudFormation), database migration automation, and blue-green deployment strategy. Configure production monitoring, alerting, backup strategies, and disaster recovery procedures. Setup SSL certificates, domain configuration, and CDN integration. Add deployment rollback capabilities and production health monitoring.",
+        "testStrategy": "Deployment pipeline testing, infrastructure provisioning validation, backup and recovery testing, SSL certificate validation, production monitoring verification, and disaster recovery procedure testing",
+        "priority": "high",
+        "dependencies": [
+          10,
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-06-26T17:09:28.509Z",
+      "updated": "2025-06-26T17:24:08.976Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
