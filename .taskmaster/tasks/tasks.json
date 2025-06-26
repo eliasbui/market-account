@@ -228,8 +228,62 @@
         "testStrategy": "Verify that on every PR the pipeline triggers and completes successfully for all services. Simulate a commit to main branch and ensure deployment job executes.",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "in-progress",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set Up Nx Monorepo",
+            "description": "Initialize a new Nx workspace to manage all microservices and frontend code in a monorepo structure.",
+            "dependencies": [],
+            "details": "Use the command `npx create-nx-workspace@latest my-workspace` to create a new Nx workspace. During setup, choose an integrated monorepo configuration to facilitate efficient management of multiple projects within a single repository. ([20.nx.dev](https://20.nx.dev/getting-started/installation?utm_source=openai))",
+            "status": "in-progress",
+            "testStrategy": "N/A"
+          },
+          {
+            "id": 2,
+            "title": "Define Branching Strategy",
+            "description": "Establish a consistent branching strategy to manage development, testing, and production workflows across all projects in the monorepo.",
+            "dependencies": [
+              1
+            ],
+            "details": "Implement a Git branching model such as Git Flow or trunk-based development to streamline collaboration and code integration. Clearly define branch names and merge policies to maintain code quality and stability. ([dev.to](https://dev.to/hasancse/setting-up-an-nx-monorepo-a-step-by-step-guide-9k4?utm_source=openai))",
+            "status": "pending",
+            "testStrategy": "N/A"
+          },
+          {
+            "id": 3,
+            "title": "Configure GitHub Actions for CI/CD",
+            "description": "Set up GitHub Actions workflows to automate linting, testing, building, and deployment processes for all projects in the monorepo.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create a `.github/workflows/ci.yml` file in the root directory of the repository. Define jobs for linting, testing, building, and deploying each project. Utilize Nx's affected commands to run tasks only on projects that have changed, optimizing CI/CD performance. ([nx.dev](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=openai))",
+            "status": "pending",
+            "testStrategy": "N/A"
+          },
+          {
+            "id": 4,
+            "title": "Implement Matrix Builds for Multiple Languages",
+            "description": "Configure matrix builds in GitHub Actions to run tests and builds across multiple programming languages, including Go, .NET, Python, and Node.js.",
+            "dependencies": [
+              3
+            ],
+            "details": "In the GitHub Actions workflow, set up a matrix strategy to run jobs for different versions of Go, .NET, Python, and Node.js. This ensures that all services are tested and built against their respective environments, maintaining compatibility and reliability. ([bytegoblin.io](https://bytegoblin.io/blog/ci-cd-pipeline-guide-with-github-actions.mdx?utm_source=openai))",
+            "status": "pending",
+            "testStrategy": "N/A"
+          },
+          {
+            "id": 5,
+            "title": "Deploy to Development Environment",
+            "description": "Automate the deployment of the monorepo to a development environment upon successful completion of CI/CD pipelines.",
+            "dependencies": [
+              3
+            ],
+            "details": "Extend the GitHub Actions workflow to include deployment steps that trigger after successful builds and tests. Configure deployment scripts to deploy the latest changes to a development environment, facilitating continuous integration and testing. ([bytegoblin.io](https://bytegoblin.io/blog/ci-cd-pipeline-guide-with-github-actions.mdx?utm_source=openai))",
+            "status": "pending",
+            "testStrategy": "N/A"
+          }
+        ]
       },
       {
         "id": 14,
@@ -838,7 +892,7 @@
     ],
     "metadata": {
       "created": "2025-06-26T17:09:28.509Z",
-      "updated": "2025-06-26T19:10:34.690Z",
+      "updated": "2025-06-26T19:18:05.488Z",
       "description": "Tasks for master context"
     }
   }
