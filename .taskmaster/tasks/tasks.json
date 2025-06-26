@@ -39,7 +39,7 @@
               1
             ],
             "details": "Design and implement RESTful APIs for each microservice, defining clear and consistent endpoints that allow external clients to perform CRUD operations. Ensure proper validation, error handling, and authentication mechanisms are in place.",
-            "status": "pending",
+            "status": "in-progress",
             "testStrategy": "Perform functional testing to verify that all RESTful endpoints behave as expected, including handling of valid and invalid inputs, and ensure that authentication and authorization mechanisms are effective."
           },
           {
@@ -223,7 +223,7 @@
     ],
     "metadata": {
       "created": "2025-06-26T17:09:28.509Z",
-      "updated": "2025-06-26T18:00:39.851Z",
+      "updated": "2025-06-26T18:01:33.208Z",
       "description": "Tasks for master context"
     }
   }
