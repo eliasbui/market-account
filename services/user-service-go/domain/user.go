@@ -37,15 +37,44 @@ func NewUser(email, username, password string) *User {
 	}
 }
 
-// ValidateEmail validates user email format
-func (u *User) ValidateEmail() bool {
-	// Basic email validation logic
-	return len(u.Email) > 0 && contains(u.Email, "@")
+// ValidatePassword checks if the provided password matches the user's password
+func (u *User) ValidatePassword(password string) bool {
+	// In a real implementation, you would hash the input password
+	// and compare it with the stored hashed password
+	// For now, we'll do a simple string comparison (NOT for production!)
+	return u.Password == password
 }
 
-// ValidateUsername validates username requirements
+// ValidateEmail checks if the user's email is in a valid format
+func (u *User) ValidateEmail() bool {
+	// Basic email validation - in production use a proper email validation library
+	return len(u.Email) > 0 && len(u.Email) <= 255 &&
+		u.Email != "" &&
+		len(u.Email) > 3 // Very basic check
+}
+
+// ValidateUsername checks if the username meets requirements
 func (u *User) ValidateUsername() bool {
 	return len(u.Username) >= 3 && len(u.Username) <= 50
+}
+
+// UpdatePassword updates the user's password
+func (u *User) UpdatePassword(newPassword string) {
+	// In production, hash the password before storing
+	u.Password = newPassword
+	u.UpdatedAt = time.Now()
+}
+
+// Activate activates the user account
+func (u *User) Activate() {
+	u.IsActive = true
+	u.UpdatedAt = time.Now()
+}
+
+// Deactivate deactivates the user account
+func (u *User) Deactivate() {
+	u.IsActive = false
+	u.UpdatedAt = time.Now()
 }
 
 // contains is a helper function

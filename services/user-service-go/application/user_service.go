@@ -20,6 +20,15 @@ type UserService struct {
 	userRepo UserRepository
 }
 
+func (s *UserService) GetUser(ctx context.Context, id string) (*domain.User, error) {
+	user, err := s.userRepo.GetByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
 // NewUserService creates a new instance of UserService
 func NewUserService(userRepo UserRepository) *UserService {
 	return &UserService{
@@ -29,16 +38,9 @@ func NewUserService(userRepo UserRepository) *UserService {
 
 // CreateUser creates a new user in the system
 func (s *UserService) CreateUser(ctx context.Context, email, username, password string) (*domain.User, error) {
-	// Create new user entity
-	user := domain.NewUser(email, username, password)
-
-	// Validate user data
-	if !user.ValidateEmail() {
-		return nil, errors.New("invalid email format")
-	}
-
-	if !user.ValidateUsername() {
-		return nil, errors.New("invalid username: must be between 3 and 50 characters")
+	// Validate input
+	if email == "" || username == "" || password == "" {
+		return nil, errors.New("email, username, and password are required")
 	}
 
 	// Check if user already exists
@@ -47,7 +49,10 @@ func (s *UserService) CreateUser(ctx context.Context, email, username, password 
 		return nil, errors.New("user with this email already exists")
 	}
 
-	// Create user in repository
+	// Create new user
+	user := domain.NewUser(email, username, password)
+
+	// Save to repository
 	if err := s.userRepo.Create(ctx, user); err != nil {
 		return nil, err
 	}
@@ -55,30 +60,68 @@ func (s *UserService) CreateUser(ctx context.Context, email, username, password 
 	return user, nil
 }
 
-// GetUser retrieves a user by ID
-func (s *UserService) GetUser(ctx context.Context, id string) (*domain.User, error) {
-	return s.userRepo.GetByID(ctx, id)
-}
-
-// GetUserByEmail retrieves a user by email
-func (s *UserService) GetUserByEmail(ctx context.Context, email string) (*domain.User, error) {
-	return s.userRepo.GetByEmail(ctx, email)
-}
-
-// UpdateUser updates an existing user
-func (s *UserService) UpdateUser(ctx context.Context, user *domain.User) error {
-	if !user.ValidateEmail() {
-		return errors.New("invalid email format")
+// GetUserByID retrieves a user by their ID
+func (s *UserService) GetUserByID(ctx context.Context, id string) (*domain.User, error) {
+	if id == "" {
+		return nil, errors.New("user ID is required")
 	}
 
-	if !user.ValidateUsername() {
-		return errors.New("invalid username: must be between 3 and 50 characters")
+	user, err := s.userRepo.GetByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// GetUserByEmail retrieves a user by their email address
+func (s *UserService) GetUserByEmail(ctx context.Context, email string) (*domain.User, error) {
+	if email == "" {
+		return nil, errors.New("email is required")
+	}
+
+	user, err := s.userRepo.GetByEmail(ctx, email)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// ValidateCredentials validates user credentials for authentication
+func (s *UserService) ValidateCredentials(ctx context.Context, email, password string) (bool, *domain.User, error) {
+	if email == "" || password == "" {
+		return false, nil, errors.New("email and password are required")
+	}
+
+	// Get user by email
+	user, err := s.userRepo.GetByEmail(ctx, email)
+	if err != nil {
+		return false, nil, err
+	}
+
+	// Validate password (in real implementation, you'd hash the password and compare)
+	if user.ValidatePassword(password) {
+		return true, user, nil
+	}
+
+	return false, nil, nil
+}
+
+// UpdateUser updates user information
+func (s *UserService) UpdateUser(ctx context.Context, user *domain.User) error {
+	if user == nil {
+		return errors.New("user is required")
 	}
 
 	return s.userRepo.Update(ctx, user)
 }
 
-// DeleteUser deletes a user by ID
-func (s *UserService) DeleteUser(ctx context.Context, id string) error {
-	return s.userRepo.Delete(ctx, id)
+// DeleteUser removes a user from the system
+func (s *UserService) DeleteUser(ctx context.Context, userID string) error {
+	if userID == "" {
+		return errors.New("user ID is required")
+	}
+
+	return s.userRepo.Delete(ctx, userID)
 }
