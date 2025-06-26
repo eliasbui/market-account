@@ -219,11 +219,626 @@
         ],
         "status": "pending",
         "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Initialize Monorepo and CI/CD Pipelines",
+        "description": "Set up a monorepo for all microservices and frontend code, define branching strategy, and configure CI/CD pipelines for build, test, and deploy.",
+        "details": "Use a tool like Nx or plain Git with subdirectories. Configure GitHub Actions (YAML) to run lint (ESLint/Prettier), unit tests, build containers, and deploy to development environment. Include matrix builds for Go, .NET, Python, and Node services.",
+        "testStrategy": "Verify that on every PR the pipeline triggers and completes successfully for all services. Simulate a commit to main branch and ensure deployment job executes.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Define Infrastructure as Code with Terraform",
+        "description": "Create Terraform scripts to provision PostgreSQL, Cassandra, Redis, and the vector database in the cloud.",
+        "details": "Use Terraform v1.4.5 and AWS provider. Define modules for RDS Aurora Postgres, Keyspaces/Cassandra, Elasticache Redis, and Pinecone (or managed vector DB). Store state in S3 with DynamoDB locking. Parameterize VPC, subnets, and security groups.",
+        "testStrategy": "Run terraform init/plan/apply in a dev workspace, verify that all resources are created and reachable. Destroy and recreate to ensure idempotency.",
+        "priority": "high",
+        "dependencies": [
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Setup PostgreSQL Database and Migrations",
+        "description": "Provision Postgres and implement the core schema and indexes as per PRD.",
+        "details": "Use Flyway Community v8.5.13 for migrations. Write SQL migration scripts for users, categories, products, carts, orders, payments, reviews, knowledge_base tables and indexes. Configure Flyway in each relevant service.",
+        "testStrategy": "Run Flyway migrate in CI. Connect with psql to confirm table and index existence. Rollback test by undoing last migration.",
+        "priority": "high",
+        "dependencies": [
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Setup Apache Cassandra Cluster and CQL Scripts",
+        "description": "Provision Cassandra keyspace and tables for high-volume analytics and inventory as defined.",
+        "details": "Use Terraform to create AWS Keyspaces or self-managed Cassandra. Write CQL scripts for digital_inventory, user_activity_logs, product_views, search_queries, chat_conversations. Automate script execution in CI.",
+        "testStrategy": "Run cqlsh commands in CI to execute scripts. Query each table for schema correctness and insert sample rows.",
+        "priority": "medium",
+        "dependencies": [
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Provision Redis Cache and Configure Connection",
+        "description": "Create a Redis instance for session storage, caching, and real-time data.",
+        "details": "Use Elasticache Redis cluster. In each service, configure ioredis (Node), go-redis v8 (Go), StackExchange.Redis (C#) with pooling settings. Define TTL values for sessions (86400s), products (3600s), carts (604800s).",
+        "testStrategy": "Write a smoke integration test: SET and GET keys with TTL, verify expiration behavior.",
+        "priority": "medium",
+        "dependencies": [
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Setup Vector Database for RAG",
+        "description": "Provision and configure a vector DB index for semantic search of the knowledge base.",
+        "details": "Use Pinecone SDK Python v1.1.10. Create index with dimension=1536, metric=cosine, pod_type p1.x1, replicas=2. Automate via Terraform or Python script.",
+        "testStrategy": "Insert a dummy embedding vector, perform a query, and verify that the inserted vector is returned as nearest neighbor.",
+        "priority": "medium",
+        "dependencies": [
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Scaffold Microservice Boilerplate",
+        "description": "Generate boilerplate code for Go, .NET, Python, and Node.js microservices following Clean Architecture.",
+        "details": "Use custom Yeoman generators or CLI templates: Go v1.20 modules with controllers, usecases, entities; .NET 8 solution with projects for Domain, Application, Infrastructure; Python 3.11 + Poetry with FastAPI; Node.js 18 using Express or Bun.js. Include Dockerfiles.",
+        "testStrategy": "Compile/build each service, run basic health-check endpoint returning status OK.",
+        "priority": "high",
+        "dependencies": [
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Define gRPC Interfaces and Protocol Buffers",
+        "description": "Create .proto definitions for inter-service communication messages and services.",
+        "details": "Define messages for Auth, User, Product, Cart, Order, Payment, Chat. Use grpc-go v1.54, grpc-dotnet v2.54, grpcio v1.51. Automate stub generation in each service pipeline.",
+        "testStrategy": "Generate stubs for each language and write a basic RPC client-server test verifying message round-trip.",
+        "priority": "high",
+        "dependencies": [
+          19
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Implement GraphQL API Gateway",
+        "description": "Build an Apollo Server GraphQL gateway aggregating downstream microservices.",
+        "details": "Use Apollo Server v4 on Node.js 18. Employ Apollo Federation or schema stitching. Implement resolvers that call out to gRPC stubs. Setup authentication directive and error handling.",
+        "testStrategy": "Run integration tests: execute sample queries and mutations, verify data from underlying services is returned correctly.",
+        "priority": "high",
+        "dependencies": [
+          19,
+          20
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Implement User Management Service",
+        "description": "Develop the .NET microservice for user registration, authentication, and account management.",
+        "details": "Use ASP.NET Core 8 with IdentityServer4 for JWT, EF Core 8 for Postgres. Implement email/password flow, email verification via SendGrid API, Google/Facebook OAuth2 using Microsoft.AspNetCore.Authentication.Google and .Facebook.",
+        "testStrategy": "Unit tests for services, integration tests for DB operations and authentication flows. Test email pipeline in staging.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "Implement Product Catalog Service",
+        "description": "Develop the .NET microservice for product CRUD, search, and catalog operations.",
+        "details": "Use ASP.NET Core 8, EF Core 8 with PostgreSQL. Implement full-text search via Npgsql EF functions. CRUD endpoints, pagination, filtering by category, price, rating.",
+        "testStrategy": "Unit tests for repository and business logic. Integration tests against a test Postgres instance verifying search results and filters.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Implement Cart Service",
+        "description": "Develop the Go microservice managing shopping cart operations.",
+        "details": "Use Go v1.20 with gin-gonic for HTTP, go-redis v8 for data store. Implement add/remove items, quantity adjustments, price snapshots, TTL management. Dockerize service.",
+        "testStrategy": "Unit tests for cart logic. Integration tests against a Redis instance verifying add, update, remove, and TTL expiration.",
+        "priority": "medium",
+        "dependencies": [
+          21,
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Implement Order Service",
+        "description": "Develop the Go microservice handling orders, order items, and digital fulfillment.",
+        "details": "Use Go v1.20, pgx v5 for Postgres. Implement order creation with transaction, allocate digital keys via Cassandra queries, update stock. Expose gRPC methods.",
+        "testStrategy": "Unit tests for business logic. Integration tests creating full order flow, verifying DB writes and key assignment.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          15,
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "Implement Payment Service",
+        "description": "Develop the Go microservice integrating multiple payment providers.",
+        "details": "Use Go v1.20, Stripe Go SDK v79, PayPal REST SDK v1, VNPay/Momo custom REST clients. Implement payment intents, webhooks, callback handling, update payment status.",
+        "testStrategy": "Mock provider endpoints in tests to simulate success/failure webhooks. Integration tests with sandbox accounts.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 27,
+        "title": "Implement AI RAG Service",
+        "description": "Develop the Python microservice for retrieval-augmented generation chatbot.",
+        "details": "Use Python 3.11 + FastAPI v0.90. Integrate langchain v0.0.236, OpenAI Python v0.27, Pinecone SDK. Implement document ingestion, chunking with nltk, embedding storage, semantic search endpoint.",
+        "testStrategy": "Unit tests for chunking and embedding code. Integration tests calling retrieval endpoint, verifying context returned for sample document.",
+        "priority": "medium",
+        "dependencies": [
+          20,
+          15,
+          18
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 28,
+        "title": "Implement Chat Service",
+        "description": "Develop the Node.js microservice for real-time chat and message persistence.",
+        "details": "Use Node.js 18 with NestJS v9 or Express + Socket.io v4. Persist messages to Cassandra chat_conversations table. Implement message broadcasting and typing indicators.",
+        "testStrategy": "Unit tests for WebSocket events. E2E tests: connect two clients, exchange messages, verify persistence in Cassandra.",
+        "priority": "medium",
+        "dependencies": [
+          19,
+          20
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 29,
+        "title": "Implement RBAC and JWT Middleware",
+        "description": "Add role-based access control and JWT validation across GraphQL and microservices.",
+        "details": "Use jsonwebtoken for JWT RS256 validation. In Apollo Gateway, integrate graphql-shield for permissions. In Go and .NET, implement gRPC interceptors verifying roles from token claims.",
+        "testStrategy": "Unit tests for permission rules. Integration tests simulating requests with customer/admin/super_admin tokens verifying access is correct.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          22,
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 30,
+        "title": "Scaffold Frontend Application",
+        "description": "Initialize the React frontend using TypeScript, Redux Toolkit, Tailwind CSS, and Vite.",
+        "details": "Run npx create-vite@latest react-ts. Install redux-toolkit@1.9, react-router-dom@6, tailwindcss@3, ESLint, Prettier. Configure folder structure for pages, components, store.",
+        "testStrategy": "Run `npm run dev`, verify development server starts and renders Hello World.",
+        "priority": "high",
+        "dependencies": [
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 31,
+        "title": "Implement Auth UI and Flows",
+        "description": "Build login, registration, email verification, and password reset pages with social login.",
+        "details": "Use React Hook Form v7, Zod for schema validation, integrate with GraphQL mutations via Apollo Client v3. Add Google/Facebook OAuth buttons and redirect flows.",
+        "testStrategy": "Unit tests for form validation. E2E tests with Cypress simulating user signup, login, and password reset flows.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          29,
+          30
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 32,
+        "title": "Implement Homepage and Navigation UI",
+        "description": "Develop the client homepage with featured carousel, banners, and navigation menu.",
+        "details": "Use React Slick for carousel, framer-motion v6 for animations, Tailwind CSS for styling. Implement responsive header with menu, search bar, cart icon.",
+        "testStrategy": "Snapshot tests for layout. Manual mobile/desktop validation for responsiveness and animations.",
+        "priority": "medium",
+        "dependencies": [
+          30
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 33,
+        "title": "Implement Product Listing and Search",
+        "description": "Build product listing page with filtering, sorting, pagination, and quick view.",
+        "details": "Use Apollo Client v3 to fetch GraphQL queries. Implement filter UI for category, price, rating. Use react-infinite-scroller for infinite scroll. Quick view modal with framer-motion.",
+        "testStrategy": "Unit tests for filter logic. Integration tests mocking GraphQL responses verifying UI updates.",
+        "priority": "medium",
+        "dependencies": [
+          32
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 34,
+        "title": "Implement Product Details Page",
+        "description": "Develop the product details view with images, descriptions, reviews, and purchase actions.",
+        "details": "Render high-res images gallery (react-image-gallery v1), show specifications, use GraphQL to fetch reviews and related products. Add Add-to-Cart and Buy-Now buttons.",
+        "testStrategy": "Unit tests for component. Integration test adding item to cart and verifying cart state.",
+        "priority": "medium",
+        "dependencies": [
+          33
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 35,
+        "title": "Implement Shopping Cart and Checkout Pages",
+        "description": "Build the shopping cart UI and full checkout flow integrating payments.",
+        "details": "Manage cart state in Redux. Build cart page with quantity adjustments. For checkout, integrate Stripe Elements for card, redirect for Momo/VNPay. Call GraphQL mutations to create order and process payment.",
+        "testStrategy": "E2E tests simulating cart addition, checkout with Stripe test card, verify order status in dashboard.",
+        "priority": "high",
+        "dependencies": [
+          24,
+          25,
+          26,
+          34
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 36,
+        "title": "Implement User Dashboard and Order Management UI",
+        "description": "Develop the personal dashboard for profile, purchase history, downloads, and settings.",
+        "details": "Use react-chartjs-2 v5 for basic stats, tabbed layout for orders, downloads, profile. Integrate with GraphQL queries and mutations for profile updates and invoice downloads.",
+        "testStrategy": "Unit tests for components. Manual test updating profile, downloading a digital key, and viewing order history.",
+        "priority": "medium",
+        "dependencies": [
+          22,
+          35
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 37,
+        "title": "Implement Admin Panel and Analytics Dashboard",
+        "description": "Build the admin interface for product management, order processing, user management, and real-time KPIs.",
+        "details": "Use React Admin v4 or custom UI with react-table v7 and recharts v2. Implement product CRUD forms, bulk import (CSV), order queue UI, real-time sales charts via WebSocket notifications.",
+        "testStrategy": "Integration tests for admin flows: create/edit product, process order, view metrics. Manual audit of data consistency.",
+        "priority": "medium",
+        "dependencies": [
+          23,
+          25,
+          29,
+          36
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 38,
+        "title": "Setup Version Control and CI/CD Pipeline",
+        "description": "Initialize repository structure for microservices and frontend, configure CI/CD workflows for linting, building, testing, and deployments",
+        "details": "Use GitHub with protected branches; configure GitHub Actions workflows using Node.js 18, Go 1.21, .NET 7, Python 3.11. Include Prettier and ESLint for JS/TS, golangci-lint for Go, dotnet-format for C#, Black and Flake8 for Python. Enable Dependabot for dependency updates.",
+        "testStrategy": "Push feature branch to trigger CI; verify lint, unit test, build and artifact publishing steps pass successfully.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 39,
+        "title": "Provision Cloud Infrastructure with Terraform",
+        "description": "Define and provision core cloud resources including VPC, EKS cluster, RDS for PostgreSQL, ElastiCache Redis, Cassandra cluster, RabbitMQ or MSK, and vector DB setup",
+        "details": "Use Terraform v1.5.0 with AWS provider v5. Create modules for networking, compute (EKS), RDS(Postgres), ElastiCache(Redis), EC2-based Cassandra or managed service, OpenSearch or RabbitMQ in AWS MQ, and configure Pinecone via terraform external provider. Store state in S3 with locking via DynamoDB.",
+        "testStrategy": "Run terraform plan/apply in staging; validate resources exist, connectivity between services, correct tagging, and Terraform drift detection.",
+        "priority": "high",
+        "dependencies": [
+          38
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 40,
+        "title": "Provision and Configure PostgreSQL with Migrations",
+        "description": "Deploy PostgreSQL database on RDS, configure parameter group and extensions, and apply initial schema and indexes",
+        "details": "Use Flyway v9.16.1 for migrations. Enable pgvector extension. Apply SQL scripts from PRD for users, products, orders, reviews, knowledge_base tables and indexes. Configure parameter group: max_connections=100, logging_collector=ON.",
+        "testStrategy": "Run Flyway migrations against a local Docker Postgres and verify tables and indexes via psql; run migration in staging environment and validate schema.",
+        "priority": "high",
+        "dependencies": [
+          39
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 41,
+        "title": "Provision and Configure Apache Cassandra Keyspace",
+        "description": "Set up Cassandra keyspace and tables for high-volume data use cases",
+        "details": "Use Terraform with community Cassandra provider. Define keyspace ecommerce_analytics with replication strategy NetworkTopologyStrategy with RF=3. Apply CQL scripts for digital_inventory, user_activity_logs, product_views, search_queries, chat_conversations tables.",
+        "testStrategy": "Connect via cqlsh in staging; run DESCRIBE KEYSPACE and DESCRIBE TABLE to verify schema and replication settings.",
+        "priority": "medium",
+        "dependencies": [
+          39
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 42,
+        "title": "Configure Redis Infrastructure",
+        "description": "Deploy Redis cluster for session storage, caching, pub/sub, and rate limiting",
+        "details": "Use Terraform to provision AWS ElastiCache Redis v7.0 in cluster mode disabled for session and cache use. Configure security groups, parameter group, and snapshots for persistence.",
+        "testStrategy": "Use redis-cli in staging to set/get keys for session:{id}, HGET product:{id}, and verify pub/sub works with PUBLISH/SUBSCRIBE commands.",
+        "priority": "medium",
+        "dependencies": [
+          39
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 43,
+        "title": "Initialize Backend Microservices Monorepo",
+        "description": "Create skeleton projects for each microservice following Clean Architecture",
+        "details": "Use a monorepo managed by pnpm workspaces. Initialize Go 1.21 modules (api-gateway, order-service, payment-service), .NET 7 solution (product-catalog, user-management), Python 3.11 Poetry project (rag-chatbot), Node.js 18 TypeScript project (shopping-cart, real-time-chat). Establish folder structure: /cmd, /internal, /pkg for Go; /src for .NET; /app for Python; /services for Node.",
+        "testStrategy": "Build each service stub; run health-check endpoint returning HTTP 200 or gRPC health OK; verify monorepo tooling commands succeed.",
+        "priority": "high",
+        "dependencies": [
+          38
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 44,
+        "title": "Implement GraphQL API Gateway",
+        "description": "Set up GraphQL gateway to federate subgraph schemas and route client requests",
+        "details": "Use Node.js 18, Apollo Server 4, @apollo/gateway v0.47.0. Configure subgraph endpoints for auth, product-catalog, order, shopping-cart, and rag-chatbot services. Enable DataLoader caching and persisted queries. Serve over HTTPS with helmet and CORS setup.",
+        "testStrategy": "Run introspection query to ensure federated schema assembly. Execute sample queries and mutations against user, product, and order resolvers.",
+        "priority": "high",
+        "dependencies": [
+          43
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 45,
+        "title": "Develop Authentication Microservice",
+        "description": "Implement user registration, login, JWT issuance, OAuth2 social login, and account security",
+        "details": "Use Go 1.21 with Gin v1.9, go-jwt v4 (RS256), bcrypt v1.17 for password hashing, oauth2 v1.5 for Google/Facebook. Integrate SendGrid Go SDK v3 for email verification. Store sessions in Redis (configured in task 42) and user records in Postgres.",
+        "testStrategy": "Unit tests with Go’s testing package and Testcontainers Postgres. Integration tests for registration, email verification flow, login, and token validation.",
+        "priority": "high",
+        "dependencies": [
+          43,
+          40
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 46,
+        "title": "Implement User Authentication Flows",
+        "description": "Build endpoints for registration, login, password reset, email verification, and optional MFA",
+        "details": "Define REST endpoints: POST /register, /login, /password-reset, /verify-email. Validate password strength with zxcvbn. Store reset tokens in Redis with 1h TTL. Implement account lockout after 5 failed attempts using Redis counters. Integrate TOTP via go-otp for MFA.",
+        "testStrategy": "E2E tests using Postman/Newman to simulate user flows. Unit tests for lockout logic and token expiry.",
+        "priority": "high",
+        "dependencies": [
+          45,
+          42
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 47,
+        "title": "Build Product Catalog Microservice",
+        "description": "Implement CRUD APIs for products, categories, and metadata with filtering and pagination",
+        "details": "Use .NET 7, ASP.NET Core Web API, EF Core 7 with Npgsql provider. Implement repository and service layers, AutoMapper for DTO mapping. Use GraphQL subgraph via Hot Chocolate v12 or expose REST and stitch via API gateway. Add full-text tsvector columns for search.",
+        "testStrategy": "xUnit unit tests for service and repository. Integration tests with Testcontainers Postgres to verify CRUD and filter queries.",
+        "priority": "high",
+        "dependencies": [
+          43,
+          40
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 48,
+        "title": "Implement Search Functionality",
+        "description": "Add advanced search with full-text filtering, price range, categories, ratings, and autocomplete",
+        "details": "Leverage Postgres tsvector on name||description and GIN indexes. Expose search endpoint in product-catalog service. Use Redis sorted sets for autocomplete suggestions (ZADD search_suggestions). Implement debounce in resolver and pagination.",
+        "testStrategy": "Integration tests inserting sample products and verifying search ranking, filter criteria, and autocomplete suggestions.",
+        "priority": "medium",
+        "dependencies": [
+          47,
+          42
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 49,
+        "title": "Develop Shopping Cart Microservice",
+        "description": "Create microservice for cart operations backed by Redis",
+        "details": "Use Node.js 18 with Express v4, TypeScript, ioredis v5.3.0. Define endpoints: GET/POST/PUT/DELETE on /cart for add, remove, update quantity, price snapshot. Use Redis HASH cart:{user_id}. Implement input validation with Joi.",
+        "testStrategy": "Unit tests with Jest and Redis-mock. Integration tests against real Redis instance in Docker, verifying hash operations and TTL.",
+        "priority": "medium",
+        "dependencies": [
+          43,
+          42
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 50,
+        "title": "Implement Order Service",
+        "description": "Build gRPC-based service to create and manage orders, publish events for fulfillment",
+        "details": "Use Go 1.21, gRPC-Go, protobuf v1.28. Define OrderService with CreateOrder, GetOrder. Persist orders and order_items in Postgres via pgx v1.8. Publish NewOrder events to RabbitMQ via streadway/amqp v1.16.",
+        "testStrategy": "Unit tests for use case logic. Integration tests with Testcontainers for Postgres and RabbitMQ; verify gRPC responses and message publication.",
+        "priority": "high",
+        "dependencies": [
+          39,
+          40,
+          43
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 51,
+        "title": "Develop Payment Service Integration",
+        "description": "Integrate multiple payment gateways and handle callbacks, ensure PCI DSS compliance",
+        "details": "Use Go 1.21, Gin v1.9, HTTP clients. Integrate Momo Go SDK v1.0, VNPay API via REST, ZaloPay SDK, stripe-go v74, paypal-rest-sdk v1.3. Store provider responses in payments table. Implement idempotency and webhook handlers secured by HMAC.",
+        "testStrategy": "Mock provider APIs using Wiremock; run end-to-end payment flow tests including webhook simulation; verify state transitions in DB.",
+        "priority": "high",
+        "dependencies": [
+          39,
+          43
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 52,
+        "title": "Setup Admin Panel Skeleton",
+        "description": "Initialize the React + TypeScript admin SPA with routing, state management, and styling",
+        "details": "Use Vite v4, React v18, TypeScript v4.9, Redux Toolkit v1.9, React Router v6, Tailwind CSS v3.3. Use ESLint and Prettier configs. Scaffold basic pages: Login, Dashboard shell.",
+        "testStrategy": "Run dev server; verify page routes render placeholders; lint and type-check must pass.",
+        "priority": "high",
+        "dependencies": [
+          38
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 53,
+        "title": "Implement Admin Dashboard Components",
+        "description": "Build KPI widgets, charts, and real-time metrics on admin dashboard",
+        "details": "Use React functional components, Redux slices to fetch from GraphQL gateway. Use Recharts v2.1 for charts, Tailwind for layout. Implement WebSocket connection to real-time metrics via real-time-chat service.",
+        "testStrategy": "Component tests with React Testing Library; mock GraphQL and WebSocket data; snapshot tests for chart rendering.",
+        "priority": "medium",
+        "dependencies": [
+          52,
+          44
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 54,
+        "title": "Implement RAG Chatbot Service",
+        "description": "Build AI-powered chatbot with retrieval-augmented generation",
+        "details": "Use Python 3.11, FastAPI 0.95, LangChain 0.0.198, openai v0.27.0, pinecone-client v1.0.0. Implement document chunking with tiktoken, embeddings stored in Pinecone index dimension 1536. Use SQLAlchemy for knowledge_base CRUD.",
+        "testStrategy": "Pytest unit tests for chunking and embedding pipeline; integration tests mocking OpenAI API; verify retrieval accuracy against sample KB.",
+        "priority": "medium",
+        "dependencies": [
+          43,
+          39
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 55,
+        "title": "Develop Real-time Chat Microservice",
+        "description": "Implement WebSocket-based chat infrastructure for customer support interface",
+        "details": "Use Node.js 18, Socket.io v4, TypeScript. Use Redis pub/sub adapter for horizontal scaling. Expose connect, message, join room, attach file events. Persist chat history to Cassandra or Postgres.",
+        "testStrategy": "Unit tests for event handlers; integration test with two clients exchanging messages; verify Redis pub/sub and persistence.",
+        "priority": "medium",
+        "dependencies": [
+          43,
+          42
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 56,
+        "title": "Implement Client Frontend Homepage and Core Pages",
+        "description": "Build client-facing homepage, navigation, and search bar",
+        "details": "Use React v18, TypeScript, Apollo Client v3, Tailwind CSS, React Slick v0.29 for carousel. Fetch featured, new arrivals, promotional banners via GraphQL. Implement autocomplete search with debounce.",
+        "testStrategy": "Cypress E2E tests: load homepage, interact with carousel, search suggestions, navigation links.",
+        "priority": "medium",
+        "dependencies": [
+          44
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 57,
+        "title": "Build Client Frontend Product Listing and Details Pages",
+        "description": "Implement product listing, filtering, quick view, product detail view with reviews",
+        "details": "Use React, Apollo Client v3, implement grid/list toggle, infinite scroll with react-infinite-scroll-component v6, quick view modal with framer-motion v7. Display product images, descriptions, reviews, add-to-cart/wishlist.",
+        "testStrategy": "Component tests for listing and detail pages; Cypress E2E to simulate filter, quick view, add-to-cart, and product share actions.",
+        "priority": "medium",
+        "dependencies": [
+          44,
+          47,
+          48
+        ],
+        "status": "pending",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-06-26T17:09:28.509Z",
-      "updated": "2025-06-26T19:00:26.819Z",
+      "updated": "2025-06-26T19:10:34.690Z",
       "description": "Tasks for master context"
     }
   }
