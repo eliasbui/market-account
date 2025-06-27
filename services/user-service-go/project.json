@@ -1,0 +1,66 @@
+{
+  "name": "user-service-go",
+  "sourceRoot": "services/user-service-go",
+  "projectType": "application",
+  "tags": ["scope:backend", "type:service", "language:go", "domain:user"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "go build -o user-service .",
+        "cwd": "services/user-service-go"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./user-service",
+        "cwd": "services/user-service-go"
+      },
+      "dependsOn": ["build"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "go run .",
+        "cwd": "services/user-service-go"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "go test ./...",
+        "cwd": "services/user-service-go"
+      }
+    },
+    "test-coverage": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out",
+        "cwd": "services/user-service-go"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "go vet ./... && golint ./...",
+        "cwd": "services/user-service-go"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "go fmt ./...",
+        "cwd": "services/user-service-go"
+      }
+    },
+    "deps": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "go mod download && go mod tidy",
+        "cwd": "services/user-service-go"
+      }
+    }
+  },
+  "implicitDependencies": ["proto"]
+} 

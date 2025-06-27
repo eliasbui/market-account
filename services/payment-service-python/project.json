@@ -1,0 +1,72 @@
+{
+  "name": "payment-service-python",
+  "sourceRoot": "services/payment-service-python",
+  "projectType": "application",
+  "tags": ["scope:backend", "type:service", "language:python", "domain:payment"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m py_compile $(find . -name '*.py')",
+        "cwd": "services/payment-service-python"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m uvicorn web.main:app --host 0.0.0.0 --port 8000",
+        "cwd": "services/payment-service-python"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m uvicorn web.main:app --host 0.0.0.0 --port 8000 --reload",
+        "cwd": "services/payment-service-python"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m pytest",
+        "cwd": "services/payment-service-python"
+      }
+    },
+    "test-coverage": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m pytest --cov=. --cov-report=html",
+        "cwd": "services/payment-service-python"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m flake8 . && python -m pylint **/*.py",
+        "cwd": "services/payment-service-python"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m black . && python -m isort .",
+        "cwd": "services/payment-service-python"
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pip install -r requirements.txt",
+        "cwd": "services/payment-service-python"
+      }
+    },
+    "venv": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m venv venv && source venv/bin/activate && pip install -r requirements.txt",
+        "cwd": "services/payment-service-python"
+      }
+    }
+  },
+  "implicitDependencies": ["proto"]
+} 

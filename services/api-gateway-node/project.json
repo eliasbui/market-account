@@ -1,0 +1,51 @@
+{
+  "name": "api-gateway-node",
+  "sourceRoot": "services/api-gateway-node/src",
+  "projectType": "application",
+  "tags": ["scope:backend", "type:gateway", "language:node"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run build",
+        "cwd": "services/api-gateway-node"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm start",
+        "cwd": "services/api-gateway-node"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run dev",
+        "cwd": "services/api-gateway-node"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm test",
+        "cwd": "services/api-gateway-node"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx eslint src/**/*.js",
+        "cwd": "services/api-gateway-node"
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm install",
+        "cwd": "services/api-gateway-node"
+      }
+    }
+  },
+  "implicitDependencies": ["proto"]
+} 

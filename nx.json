@@ -1,0 +1,41 @@
+{
+  "installation": {
+    "version": "21.2.1"
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "nxCloudId": "685d9d6655701e34fe30ed4e",
+  "workspaceLayout": {
+    "projectsDir": "services"
+  },
+  "targetDefaults": {
+    "build": {
+      "cache": true,
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "cache": true
+    },
+    "lint": {
+      "cache": true
+    },
+    "format": {
+      "cache": true
+    }
+  },
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*"],
+    "production": ["default", "!{projectRoot}/**/*.spec.*", "!{projectRoot}/**/*.test.*"]
+  },
+  "pluginsConfig": {
+    "@nx/js": {
+      "analyzeSourceFiles": true
+    }
+  },
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "preset": "conventional"
+      }
+    }
+  }
+}
