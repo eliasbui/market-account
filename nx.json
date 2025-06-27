@@ -10,7 +10,9 @@
   "targetDefaults": {
     "build": {
       "cache": true,
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "test": {
       "cache": true
@@ -23,8 +25,14 @@
     }
   },
   "namedInputs": {
-    "default": ["{projectRoot}/**/*"],
-    "production": ["default", "!{projectRoot}/**/*.spec.*", "!{projectRoot}/**/*.test.*"]
+    "default": [
+      "{projectRoot}/**/*"
+    ],
+    "production": [
+      "default",
+      "!{projectRoot}/**/*.spec.*",
+      "!{projectRoot}/**/*.test.*"
+    ]
   },
   "pluginsConfig": {
     "@nx/js": {
@@ -37,5 +45,6 @@
         "preset": "conventional"
       }
     }
-  }
+  },
+  "defaultBase": "master"
 }
